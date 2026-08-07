@@ -1,0 +1,3561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Testamento Virtual — Colombia</title>
+  <meta name="description" content="Herramienta gratuita para elaborar tu testamento abierto conforme al Código Civil Colombiano. Accesible, seguro e inclusivo." />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+/* =============================================
+   MI TESTAMENTO VIRTUAL — styles.css
+   Paleta original preservada + mejoras UI
+   ============================================= */
+
+:root {
+  --primary: #4361ee;
+  --primary-dark: #3a56d4;
+  --secondary: #3f37c9;
+  --light: #f8f9fa;
+  --dark: #212529;
+  --success: #4bb543;
+  --warning: #f0ad4e;
+  --danger: #d9534f;
+  --gray: #6c757d;
+  --border: #e9ecef;
+  --bg: #f5f7ff;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0; padding: 0;
+  background-color: var(--bg);
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+/* ============ HEADER ============ */
+.app-header {
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+  color: white;
+  padding: 0.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 12px rgba(67,97,238,0.3);
+}
+.header-brand {
+  display: flex; align-items: center; gap: 0.875rem;
+  cursor: pointer;
+}
+.header-logo {
+  width: 42px; height: 42px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 0.6rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+}
+.header-title {
+  display: block; font-weight: 700; font-size: 1.1rem; line-height: 1.2;
+}
+.header-subtitle {
+  display: block; font-size: 0.72rem; opacity: 0.8; font-weight: 300;
+}
+.header-checklist {
+  display: flex; gap: 0.5rem; flex-wrap: wrap;
+}
+.checklist-item {
+  font-size: 0.75rem; font-weight: 500;
+  background: rgba(255,255,255,0.15);
+  padding: 0.25rem 0.6rem;
+  border-radius: 1rem;
+  display: flex; align-items: center; gap: 0.3rem;
+  transition: all 0.3s;
+}
+.checklist-item i { font-size: 0.6rem; color: rgba(255,255,255,0.5); }
+.checklist-item.done { background: rgba(75,181,67,0.3); }
+.checklist-item.done i { color: #7fff7a; }
+
+/* ============ NAV ============ */
+nav {
+  background: var(--primary);
+  padding: 0.625rem 1rem;
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 0.25rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+nav button {
+  background: white; color: var(--primary);
+  border: none; padding: 0.6rem 1.1rem;
+  border-radius: 0.5rem; font-weight: 600; font-size: 0.85rem;
+  cursor: pointer; transition: all 0.3s ease;
+  display: flex; align-items: center; gap: 0.4rem;
+  font-family: 'Poppins', sans-serif;
+}
+nav button:hover { background: var(--light); transform: translateY(-2px); }
+nav button.nav-active { background: var(--secondary); color: white; }
+
+/* ============ CONTAINER ============ */
+.container {
+  padding: 2rem; max-width: 920px;
+  margin: 1.5rem auto;
+  background: white; border-radius: 1rem;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+/* ============ PAGES ============ */
+.pagina { display: none; }
+.pagina.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ============ LANDING ============ */
+.landing-hero {
+  text-align: center; padding: 2.5rem 1rem 2rem;
+}
+.landing-badge {
+  display: inline-block; background: rgba(67,97,238,0.1);
+  color: var(--primary); font-size: 0.8rem; font-weight: 600;
+  padding: 0.3rem 1rem; border-radius: 1rem; margin-bottom: 1rem;
+  border: 1px solid rgba(67,97,238,0.2);
+}
+.landing-hero h1 {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 700; margin: 0 0 1rem; line-height: 1.25;
+  color: var(--dark);
+}
+.landing-accent { color: var(--primary); }
+.landing-desc { color: var(--gray); font-size: 0.97rem; margin-bottom: 2rem; }
+.landing-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.btn-hero {
+  background: var(--primary); color: white;
+  border: none; padding: 0.875rem 2rem; border-radius: 0.5rem;
+  font-weight: 600; font-size: 1rem; cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  transition: all 0.3s; font-family: 'Poppins', sans-serif;
+}
+.btn-hero:hover { background: var(--primary-dark); transform: translateY(-2px); }
+.btn-hero-outline {
+  background: white; color: var(--primary);
+  border: 2px solid var(--primary); padding: 0.875rem 2rem; border-radius: 0.5rem;
+  font-weight: 600; font-size: 1rem; cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  transition: all 0.3s; font-family: 'Poppins', sans-serif;
+}
+.btn-hero-outline:hover { background: rgba(67,97,238,0.05); transform: translateY(-2px); }
+
+.landing-pasos { padding: 1rem 0 2rem; }
+.landing-pasos h2 { text-align: center; margin-bottom: 1.5rem; font-size: 1.3rem; color: var(--dark); }
+.pasos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem; }
+.paso-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 0.75rem; padding: 1.25rem; text-align: center;
+  position: relative; transition: box-shadow 0.3s;
+}
+.paso-card:hover { box-shadow: 0 4px 16px rgba(67,97,238,0.1); }
+.paso-num {
+  position: absolute; top: -0.75rem; left: 50%; transform: translateX(-50%);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--primary); color: white;
+  font-weight: 700; font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.paso-icon { font-size: 1.8rem; color: var(--primary); margin: 0.5rem 0; }
+.paso-card h4 { margin: 0.5rem 0; font-size: 0.95rem; }
+.paso-card p { font-size: 0.82rem; color: var(--gray); margin: 0; }
+
+.landing-aviso {
+  display: flex; gap: 0.875rem; align-items: flex-start;
+  background: rgba(240,173,78,0.08); border: 1px solid rgba(240,173,78,0.3);
+  border-radius: 0.5rem; padding: 1rem 1.25rem;
+  font-size: 0.87rem; color: #7a5c00;
+}
+.landing-aviso i { color: var(--warning); margin-top: 0.1rem; flex-shrink: 0; }
+
+/* ============ LEGAL NOTES ============ */
+.legal-note {
+  background: rgba(67,97,238,0.05); border-left: 4px solid var(--primary);
+  padding: 0.75rem 1rem; border-radius: 0 0.5rem 0.5rem 0;
+  font-size: 0.85rem; color: var(--gray); margin-bottom: 1.5rem;
+  display: flex; gap: 0.6rem; align-items: flex-start;
+}
+.legal-note i { color: var(--primary); margin-top: 0.1rem; flex-shrink: 0; }
+.legal-note-sm {
+  background: rgba(67,97,238,0.04); border-left: 3px solid var(--primary);
+  padding: 0.5rem 0.875rem; border-radius: 0 0.4rem 0.4rem 0;
+  font-size: 0.8rem; color: var(--gray); margin-bottom: 1rem;
+  display: flex; gap: 0.5rem; align-items: flex-start;
+}
+.legal-note-sm i { color: var(--primary); flex-shrink: 0; }
+
+/* ============ PROGRESS ============ */
+.progress-container {
+  display: flex; justify-content: space-between;
+  margin-bottom: 2rem; position: relative; padding-bottom: 1.75rem;
+}
+.progress-bar {
+  position: absolute; top: 19px; left: 0; right: 0;
+  height: 4px; background: var(--border); z-index: 1;
+}
+.progress-bar-active {
+  position: absolute; top: 0; left: 0; height: 100%;
+  background: var(--primary); transition: width 0.4s ease;
+}
+.progress-step {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: white; border: 3px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; color: var(--gray); position: relative; z-index: 2;
+}
+.progress-step.active { border-color: var(--primary); color: var(--primary); }
+.progress-step.completed { background: var(--primary); border-color: var(--primary); color: white; }
+.progress-label {
+  position: absolute; top: calc(100% + 0.4rem);
+  left: 50%; transform: translateX(-50%);
+  white-space: nowrap; font-size: 0.78rem; color: var(--gray);
+}
+
+/* ============ TABS ============ */
+.tabs {
+  display: flex; margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border); flex-wrap: wrap;
+}
+.tabs button {
+  padding: 0.75rem 1.25rem; margin-right: 0.25rem;
+  border: none; background: none; cursor: pointer;
+  font-weight: 500; font-size: 0.9rem; color: var(--gray);
+  position: relative; transition: all 0.3s; font-family: 'Poppins', sans-serif;
+}
+.tabs button.active { color: var(--primary); font-weight: 600; }
+.tabs button.active::after {
+  content: ''; position: absolute; bottom: -1px; left: 0;
+  width: 100%; height: 3px;
+  background: var(--primary); border-radius: 3px 3px 0 0;
+}
+.tabs button.disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ============ FORMS ============ */
+.form-group { margin-bottom: 1.25rem; }
+.form-row { display: flex; gap: 1rem; }
+.form-row .form-group { flex: 1; }
+
+label {
+  display: block; margin-bottom: 0.4rem;
+  font-weight: 500; font-size: 0.9rem;
+}
+label.required::after { content: " *"; color: var(--danger); }
+
+input, textarea, select {
+  width: 100%; padding: 0.7rem 0.875rem;
+  border: 1px solid var(--border); border-radius: 0.5rem;
+  font-family: 'Poppins', sans-serif; font-size: 0.9rem;
+  transition: all 0.3s; background: white; color: var(--dark);
+}
+input:focus, textarea:focus, select:focus {
+  outline: none; border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67,97,238,0.1);
+}
+input.invalid, select.invalid, textarea.invalid {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(217,83,79,0.1);
+}
+textarea { resize: vertical; }
+small { font-size: 0.78rem; color: var(--gray); display: block; margin-top: 0.3rem; }
+
+.input-password-wrap { position: relative; }
+.input-password-wrap input { padding-right: 2.75rem; }
+.toggle-pw {
+  position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; color: var(--gray);
+  padding: 0; font-size: 0.9rem;
+}
+
+.edad-display { font-weight: 600; margin-top: 0.3rem; }
+.edad-ok { color: var(--success); }
+.edad-error { color: var(--danger); }
+
+/* Tooltip */
+.tooltip-icon {
+  cursor: help; color: var(--primary); font-size: 0.82rem;
+  position: relative; display: inline-block; margin-left: 0.3rem;
+}
+.tooltip-icon::after {
+  content: attr(data-tip);
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: #1a1a2e; color: white; font-size: 0.75rem; font-weight: 400;
+  padding: 0.5rem 0.75rem; border-radius: 0.4rem; white-space: normal;
+  width: 220px; text-align: center; display: none; z-index: 100;
+  line-height: 1.4; box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+.tooltip-icon:hover::after { display: block; }
+
+/* ============ BUTTONS ============ */
+button { transition: all 0.3s ease; }
+button.save {
+  background: var(--primary); color: white;
+  border: none; padding: 0.8rem 1.5rem; border-radius: 0.5rem;
+  font-weight: 500; cursor: pointer; font-size: 0.9rem;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: 'Poppins', sans-serif;
+}
+button.save:hover { background: var(--primary-dark); transform: translateY(-2px); }
+button.next-tab {
+  background: var(--success); color: white;
+  border: none; padding: 0.8rem 1.5rem; border-radius: 0.5rem;
+  font-weight: 500; cursor: pointer; font-size: 0.9rem;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  margin-left: 0.75rem; font-family: 'Poppins', sans-serif;
+}
+button.next-tab:hover { background: #3a9a33; transform: translateY(-2px); }
+.print-btn {
+  background: var(--gray); color: white;
+  border: none; padding: 0.8rem 1.5rem; border-radius: 0.5rem;
+  font-weight: 500; cursor: pointer; font-size: 0.9rem;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: 'Poppins', sans-serif;
+}
+.print-btn:hover { background: #5a6268; transform: translateY(-2px); }
+.btn-exportar {
+  background: var(--secondary); color: white;
+  border: none; padding: 0.8rem 1.5rem; border-radius: 0.5rem;
+  font-weight: 500; cursor: pointer; font-size: 0.9rem;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: 'Poppins', sans-serif;
+}
+.btn-exportar:hover { background: #332eaa; transform: translateY(-2px); }
+.btn-refrescar {
+  background: white; color: var(--primary);
+  border: 1.5px solid var(--primary); padding: 0.8rem 1.5rem; border-radius: 0.5rem;
+  font-weight: 500; cursor: pointer; font-size: 0.9rem;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: 'Poppins', sans-serif;
+}
+.btn-refrescar:hover { background: rgba(67,97,238,0.06); }
+.acciones-testamento { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.25rem; }
+
+/* ============ ALERTS ============ */
+.alert {
+  padding: 0.875rem 1rem; border-radius: 0.5rem;
+  margin: 0.875rem 0; display: none;
+  font-size: 0.9rem; gap: 0.5rem; align-items: center;
+}
+.alert-success { background: rgba(75,181,67,0.08); color: #2d7a27; border: 1px solid rgba(75,181,67,0.3); }
+.alert-error { background: rgba(217,83,79,0.08); color: #a0312e; border: 1px solid rgba(217,83,79,0.3); }
+.alert-legitimaria {
+  background: rgba(240,173,78,0.1); border: 1px solid rgba(240,173,78,0.4);
+  color: #7a5200; padding: 0.875rem 1rem; border-radius: 0.5rem;
+  font-size: 0.87rem; margin-bottom: 1rem;
+}
+
+/* ============ LISTS ============ */
+.list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+.list-header h3 { margin: 0; font-size: 1rem; }
+.count-badge {
+  background: var(--primary); color: white;
+  font-size: 0.75rem; font-weight: 600;
+  padding: 0.2rem 0.6rem; border-radius: 1rem;
+}
+
+.beneficiarios-list { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+
+.beneficiario-item, .bien-item {
+  background: var(--light); padding: 1rem 1.1rem;
+  border-radius: 0.6rem; margin-bottom: 0.875rem;
+  display: flex; justify-content: space-between; align-items: center;
+  border: 1px solid var(--border);
+}
+.beneficiario-info h4, .bien-info h4 { margin: 0; color: var(--primary); font-size: 0.97rem; }
+.beneficiario-info p, .bien-info p { margin: 0.2rem 0; color: var(--gray); font-size: 0.83rem; }
+.beneficiario-actions button, .bien-actions button {
+  background: var(--danger); color: white;
+  border: none; padding: 0.4rem 0.875rem;
+  border-radius: 0.5rem; cursor: pointer; font-size: 0.83rem;
+  font-family: 'Poppins', sans-serif;
+}
+.beneficiario-actions button:hover, .bien-actions button:hover { background: #b52b27; }
+
+/* ============ PORCENTAJE BADGE ============ */
+.porcentaje-total {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 1rem; border-radius: 0.5rem;
+  font-weight: 600; font-size: 0.92rem; margin-bottom: 1rem;
+}
+.porcentaje-total.ok { background: rgba(75,181,67,0.1); color: #28762a; border: 1px solid rgba(75,181,67,0.3); }
+.porcentaje-total.warn { background: rgba(240,173,78,0.1); color: #7a5200; border: 1px solid rgba(240,173,78,0.3); }
+.porcentaje-total.over { background: rgba(217,83,79,0.1); color: #a0312e; border: 1px solid rgba(217,83,79,0.3); }
+
+/* ============================================================
+   FLUJO GUIADO — COMPUERTAS Y PANTALLAS DE TRANSICIÓN
+   ============================================================ */
+
+/* Botones de nav bloqueados */
+nav button.nav-locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  position: relative;
+}
+nav button.nav-locked::after {
+  content: '\f023';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 0.65rem;
+  position: absolute;
+  top: 4px; right: 6px;
+  color: var(--gray);
+}
+
+/* ---- Pantalla de transición (celebración entre pasos) ---- */
+.pantalla-transicion {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  animation: fadeIn 0.3s ease;
+}
+.pantalla-transicion.activa {
+  display: flex;
+}
+
+.transicion-icono {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  margin-bottom: 1.25rem;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.transicion-icono.exito  { background: rgba(75,181,67,0.12); color: var(--success); border: 3px solid rgba(75,181,67,0.3); }
+.transicion-icono.info   { background: rgba(67,97,238,0.1);  color: var(--primary); border: 3px solid rgba(67,97,238,0.25); }
+
+@keyframes popIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.transicion-titulo {
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--dark); margin-bottom: 0.5rem;
+}
+.transicion-subtitulo {
+  font-size: 0.95rem; color: var(--gray);
+  margin-bottom: 1.75rem; max-width: 440px;
+  line-height: 1.6;
+}
+
+.transicion-resumen {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 0.75rem; padding: 1rem 1.5rem;
+  margin-bottom: 1.75rem; width: 100%; max-width: 480px;
+  text-align: left;
+}
+.transicion-resumen h4 {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem; color: var(--gray);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.resumen-item {
+  display: flex; gap: 0.6rem; align-items: flex-start;
+  padding: 0.35rem 0; font-size: 0.88rem;
+  border-bottom: 1px solid var(--border);
+}
+.resumen-item:last-child { border-bottom: none; }
+.resumen-item i { color: var(--success); margin-top: 0.15rem; flex-shrink: 0; }
+
+.transicion-acciones {
+  display: flex; gap: 0.875rem; flex-wrap: wrap; justify-content: center;
+}
+.btn-continuar {
+  background: var(--primary); color: white;
+  border: none; padding: 0.9rem 2rem; border-radius: 0.5rem;
+  font-weight: 600; font-size: 1rem; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s;
+  box-shadow: 0 4px 14px rgba(67,97,238,0.35);
+}
+.btn-continuar:hover { background: var(--primary-dark); transform: translateY(-2px); }
+.btn-editar-paso {
+  background: white; color: var(--gray);
+  border: 1.5px solid var(--border); padding: 0.9rem 1.5rem; border-radius: 0.5rem;
+  font-weight: 500; font-size: 0.9rem; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s;
+}
+.btn-editar-paso:hover { border-color: var(--primary); color: var(--primary); }
+
+/* ---- Stepper global de proceso ---- */
+.proceso-stepper {
+  display: flex; align-items: center;
+  justify-content: center;
+  gap: 0; margin-bottom: 2rem;
+  overflow-x: auto; padding: 0.5rem 0;
+}
+.proceso-step {
+  display: flex; flex-direction: column; align-items: center;
+  min-width: 70px;
+}
+.proceso-step-circle {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2.5px solid var(--border);
+  background: white; color: var(--gray);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.85rem;
+  transition: all 0.3s; position: relative; z-index: 1;
+}
+.proceso-step-circle.activo { border-color: var(--primary); color: var(--primary); background: rgba(67,97,238,0.06); }
+.proceso-step-circle.completado { background: var(--success); border-color: var(--success); color: white; }
+.proceso-step-label {
+  font-size: 0.7rem; color: var(--gray); margin-top: 0.35rem;
+  text-align: center; white-space: nowrap;
+}
+.proceso-step-label.activo { color: var(--primary); font-weight: 600; }
+.proceso-step-label.completado { color: var(--success); }
+.proceso-conector {
+  height: 2.5px; width: 40px; background: var(--border);
+  margin-bottom: 18px; transition: background 0.3s; flex-shrink: 0;
+}
+.proceso-conector.completado { background: var(--success); }
+
+/* ---- Banner de sección bloqueada ---- */
+.seccion-bloqueada {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; padding: 3rem 2rem;
+}
+.bloqueada-icono {
+  font-size: 3rem; color: var(--gray);
+  margin-bottom: 1rem; opacity: 0.4;
+}
+.seccion-bloqueada h3 { color: var(--gray); margin: 0 0 0.5rem; }
+.seccion-bloqueada p  { color: var(--gray); font-size: 0.9rem; margin: 0 0 1.5rem; }
+.btn-ir-paso {
+  background: var(--primary); color: white;
+  border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem;
+  font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: all 0.3s;
+}
+.btn-ir-paso:hover { background: var(--primary-dark); }
+
+/* ---- Modal ---- */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999; animation: fadeIn 0.2s ease;
+}
+.modal-overlay.hidden { display: none; }
+.modal-box {
+  background: white; border-radius: 1rem;
+  padding: 2rem; max-width: 400px; width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  animation: popIn 0.3s ease;
+}
+.modal-icon { font-size: 2.5rem; color: var(--warning); margin-bottom: 1rem; }
+.modal-box h3 { margin: 0 0 0.5rem; font-size: 1.2rem; }
+.modal-box p  { color: var(--gray); font-size: 0.9rem; margin: 0 0 1.5rem; }
+.modal-acciones { display: flex; gap: 0.75rem; justify-content: center; }
+.btn-modal-cancelar {
+  background: white; color: var(--gray);
+  border: 1.5px solid var(--border); padding: 0.7rem 1.5rem;
+  border-radius: 0.5rem; font-weight: 500; cursor: pointer;
+  font-family: 'Poppins', sans-serif; transition: all 0.2s;
+}
+.btn-modal-cancelar:hover { border-color: var(--gray); }
+.btn-modal-confirmar {
+  background: var(--danger); color: white;
+  border: none; padding: 0.7rem 1.5rem;
+  border-radius: 0.5rem; font-weight: 600; cursor: pointer;
+  font-family: 'Poppins', sans-serif; transition: all 0.2s;
+}
+.btn-modal-confirmar:hover { background: #b52b27; }
+
+/* ---- Will preview complementos ---- */
+.albacea-section {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1.5rem;
+}
+.albacea-section h4 { margin: 0 0 0.875rem; color: var(--primary); font-size: 1rem; }
+.will-preview {
+  background: var(--bg); padding: 1.75rem;
+  border-radius: 0.75rem; border: 1px solid var(--border); margin-top: 1rem;
+}
+.will-header { text-align: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
+.will-header h3 { margin: 0; font-size: 1.3rem; letter-spacing: 0.08em; color: var(--dark); }
+.will-subtitle { color: var(--gray); font-size: 0.82rem; margin: 0.3rem 0 0; }
+.will-preview .section { margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+.will-preview .section:last-child { border-bottom: none; }
+.will-preview .section-title {
+  font-weight: 700; font-size: 0.85rem;
+  color: var(--primary); text-transform: uppercase;
+  letter-spacing: 0.06em; margin-bottom: 0.75rem;
+}
+.will-preview p { margin: 0.4rem 0; font-size: 0.9rem; line-height: 1.7; }
+.firma-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+  gap: 1.5rem; margin-top: 1.5rem;
+}
+.firma-box { text-align: center; font-size: 0.78rem; color: var(--gray); }
+.firma-linea { border-bottom: 1.5px solid var(--dark); margin-bottom: 0.5rem; height: 40px; }
+.will-firma { margin-top: 1rem; }
+
+/* ---- Footer ---- */
+footer {
+  text-align: center; padding: 1.5rem;
+  color: var(--gray); font-size: 0.82rem; margin-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+.footer-content { display: flex; flex-direction: column; gap: 0.25rem; }
+
+/* ---- Beneficios page ---- */
+.beneficios-intro {
+  color: var(--gray); font-size: 0.95rem; line-height: 1.7;
+  margin-bottom: 1.75rem; padding: 1rem 1.25rem;
+  background: rgba(67,97,238,0.05); border-left: 4px solid var(--primary);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+.beneficio-card {
+  background: white; border: 1px solid var(--border);
+  border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: box-shadow 0.3s;
+}
+.beneficio-card:hover { box-shadow: 0 4px 16px rgba(67,97,238,0.1); }
+.beneficio-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+.beneficio-header h3 { margin: 0 0 0.2rem; font-size: 1.05rem; color: var(--dark); }
+.beneficio-icon {
+  width: 52px; height: 52px; border-radius: 0.75rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; flex-shrink: 0;
+}
+.beneficio-icon.legal   { background: rgba(63,55,201,0.1);  color: var(--secondary); }
+.beneficio-icon.social  { background: rgba(75,181,67,0.1);   color: var(--success); }
+.beneficio-icon.tech    { background: rgba(67,97,238,0.1);   color: var(--primary); }
+.beneficio-tag {
+  display: inline-block; font-size: 0.72rem; font-weight: 600;
+  padding: 0.2rem 0.6rem; border-radius: 1rem;
+}
+.beneficio-tag.legal  { background: rgba(63,55,201,0.1);  color: var(--secondary); }
+.beneficio-tag.social { background: rgba(75,181,67,0.1);   color: var(--success); }
+.beneficio-tag.tech   { background: rgba(67,97,238,0.1);   color: var(--primary); }
+.beneficio-lista { list-style: none; padding: 0; margin: 0; }
+.beneficio-lista li {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 0.55rem 0; border-bottom: 1px solid #f1f3f5;
+  font-size: 0.9rem; line-height: 1.6;
+}
+.beneficio-lista li:last-child { border-bottom: none; padding-bottom: 0; }
+.beneficio-lista li i { color: var(--success); margin-top: 0.2rem; flex-shrink: 0; }
+.marco-legal-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem;
+}
+.marco-legal-card h3 { margin: 0 0 1rem; font-size: 1rem; color: var(--dark); }
+.normas-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 0.75rem;
+}
+.norma-item {
+  background: white; border: 1px solid var(--border);
+  border-radius: 0.5rem; padding: 0.75rem;
+  display: flex; flex-direction: column; gap: 0.2rem;
+}
+.norma-item strong { font-size: 0.88rem; color: var(--primary); }
+.norma-item span   { font-size: 0.8rem;  color: var(--gray); }
+.beneficios-cta { text-align: center; padding: 2rem 0 0.5rem; }
+.beneficios-cta p { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+.beneficios-cta button { margin: 0 auto; }
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .app-header { padding: 0.75rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+  .header-checklist { display: none; }
+  .container { padding: 1.25rem; margin: 0.75rem; }
+  nav button { padding: 0.5rem 0.75rem; font-size: 0.78rem; }
+  .form-row { flex-direction: column; gap: 0; }
+  .firma-grid { grid-template-columns: repeat(2, 1fr); }
+  .proceso-stepper { justify-content: flex-start; }
+  .proceso-conector { width: 20px; }
+}
+
+/* ---- Print ---- */
+@media print {
+  nav, .app-header, .print-btn, .btn-exportar, .btn-refrescar,
+  .acciones-testamento, .albacea-section, .tabs, .progress-container,
+  #lista-beneficiarios, footer, .proceso-stepper { display: none !important; }
+  .container { box-shadow: none; margin: 0; padding: 1rem; }
+  /* Solo se imprime la página actualmente activa (testamento general o testamento digital) */
+  .pagina { display: none !important; }
+  .pagina.active { display: block !important; }
+  .will-preview { border: none; background: white; padding: 0; }
+}
+
+.hidden { display: none !important; }
+
+/* ============================================================
+   ACTIVOS DIGITALES — Estilos específicos
+   ============================================================ */
+
+/* Info box */
+.digital-info-box {
+  display: flex; gap: 0.875rem; align-items: flex-start;
+  background: rgba(67,97,238,0.06); border: 1px solid rgba(67,97,238,0.2);
+  border-radius: 0.5rem; padding: 1rem 1.25rem;
+  font-size: 0.87rem; color: var(--dark); margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+.digital-info-box i { color: var(--primary); font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+.digital-info-box.warning {
+  background: rgba(240,173,78,0.08); border-color: rgba(240,173,78,0.35); color: #5a3e00;
+}
+.digital-info-box.warning i { color: var(--warning); }
+
+/* Checkbox group */
+.checkbox-group { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem; }
+.checkbox-item {
+  display: flex; align-items: center; gap: 0.625rem;
+  font-weight: 400; font-size: 0.88rem; cursor: pointer;
+  padding: 0.5rem 0.75rem; border-radius: 0.4rem;
+  border: 1px solid var(--border); background: var(--bg);
+  transition: all 0.2s;
+}
+.checkbox-item:hover { border-color: var(--primary); background: rgba(67,97,238,0.04); }
+.checkbox-item input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary); }
+
+/* Activo digital item */
+.activo-digital-item {
+  background: var(--light); padding: 1rem 1.1rem;
+  border-radius: 0.6rem; margin-bottom: 0.875rem;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  border: 1px solid var(--border);
+}
+.activo-digital-info { flex: 1; }
+.activo-digital-info h4 { margin: 0 0 0.25rem; color: var(--primary); font-size: 0.97rem; display: flex; align-items: center; gap: 0.4rem; }
+.activo-digital-info p { margin: 0.15rem 0; color: var(--gray); font-size: 0.82rem; }
+.activo-digital-badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.6rem;
+  border-radius: 1rem; margin-bottom: 0.4rem;
+}
+.badge-economico { background: rgba(75,181,67,0.1); color: #287a2a; border: 1px solid rgba(75,181,67,0.3); }
+.badge-perfil    { background: rgba(67,97,238,0.1); color: var(--primary); border: 1px solid rgba(67,97,238,0.25); }
+.badge-nube      { background: rgba(63,55,201,0.1); color: var(--secondary); border: 1px solid rgba(63,55,201,0.25); }
+.badge-suscripcion { background: rgba(240,173,78,0.1); color: #7a5200; border: 1px solid rgba(240,173,78,0.3); }
+.badge-otro      { background: rgba(108,117,125,0.1); color: var(--gray); border: 1px solid rgba(108,117,125,0.25); }
+.activo-digital-actions { flex-shrink: 0; margin-left: 0.75rem; }
+.activo-digital-actions button {
+  background: var(--danger); color: white;
+  border: none; padding: 0.4rem 0.875rem;
+  border-radius: 0.5rem; cursor: pointer; font-size: 0.83rem;
+  font-family: 'Poppins', sans-serif;
+}
+.activo-digital-actions button:hover { background: #b52b27; }
+
+/* Cláusulas notariales */
+.clausula-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1.25rem;
+  transition: box-shadow 0.2s, opacity 0.2s;
+}
+.clausula-card:hover { box-shadow: 0 3px 12px rgba(67,97,238,0.1); }
+.clausula-card:has(.clausula-check input:not(:checked)) { opacity: 0.55; }
+.clausula-card.clausula-inactiva { opacity: 0.55; }
+.clausula-header {
+  display: flex; align-items: center; gap: 0.875rem;
+  margin-bottom: 0.875rem; flex-wrap: wrap;
+}
+.clausula-check { display: flex; align-items: center; flex-shrink: 0; }
+.clausula-check input {
+  width: 20px; height: 20px; accent-color: var(--primary);
+  cursor: pointer; margin: 0;
+}
+.clausula-num {
+  background: var(--primary); color: white;
+  font-size: 0.72rem; font-weight: 700;
+  padding: 0.2rem 0.6rem; border-radius: 0.4rem; flex-shrink: 0;
+}
+.clausula-titulo { font-weight: 600; font-size: 0.92rem; flex: 1; color: var(--dark); }
+.btn-copiar-clausula {
+  background: white; color: var(--primary);
+  border: 1.5px solid var(--primary); padding: 0.35rem 0.875rem;
+  border-radius: 0.4rem; cursor: pointer; font-size: 0.8rem;
+  font-family: 'Poppins', sans-serif; display: inline-flex;
+  align-items: center; gap: 0.35rem; transition: all 0.2s; flex-shrink: 0;
+}
+.btn-copiar-clausula:hover { background: var(--primary); color: white; }
+.clausula-texto {
+  font-size: 0.87rem; color: #3a3a3a; line-height: 1.7;
+  background: white; padding: 0.875rem 1rem;
+  border-radius: 0.5rem; border: 1px solid var(--border);
+  font-style: italic;
+}
+
+/* Diagrama dos mundos */
+.dos-mundos-diagram {
+  border: 2px solid var(--border); border-radius: 0.75rem;
+  padding: 1.5rem; margin-bottom: 1.75rem;
+  background: var(--bg);
+}
+.diagrama-titulo {
+  text-align: center; font-weight: 700; font-size: 1rem;
+  color: var(--dark); margin-bottom: 1.25rem;
+  letter-spacing: 0.04em;
+}
+.diagrama-cuerpo {
+  display: flex; gap: 1.5rem; align-items: flex-start;
+  flex-wrap: wrap;
+}
+.diagrama-rama { flex: 1; min-width: 200px; }
+.diagrama-rama-titulo {
+  font-weight: 700; font-size: 0.85rem;
+  padding: 0.625rem 0.875rem; border-radius: 0.5rem;
+  margin-bottom: 0.875rem; text-align: center; line-height: 1.4;
+}
+.diagrama-rama-titulo.legal-mundo {
+  background: rgba(63,55,201,0.1); color: var(--secondary);
+  border: 1px solid rgba(63,55,201,0.25);
+}
+.diagrama-rama-titulo.tech-mundo {
+  background: rgba(67,97,238,0.1); color: var(--primary);
+  border: 1px solid rgba(67,97,238,0.25);
+}
+.diagrama-item {
+  display: flex; gap: 0.5rem; align-items: flex-start;
+  padding: 0.4rem 0; font-size: 0.85rem; color: var(--dark);
+}
+.diagrama-item i { color: var(--success); flex-shrink: 0; margin-top: 0.1rem; }
+.diagrama-conector {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; color: var(--primary); padding-top: 2.5rem;
+  flex-shrink: 0;
+}
+
+/* Big Tech grid */
+.bigtech-grid { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+.bigtech-card {
+  border: 1px solid var(--border); border-radius: 0.75rem;
+  padding: 1.25rem; background: white;
+  border-left: 4px solid var(--primary);
+  transition: box-shadow 0.2s;
+}
+.bigtech-card:hover { box-shadow: 0 3px 14px rgba(0,0,0,0.07); }
+.bigtech-card.google  { border-left-color: #4285f4; }
+.bigtech-card.apple   { border-left-color: #555555; }
+.bigtech-card.meta    { border-left-color: #1877f2; }
+.bigtech-card.cripto  { border-left-color: #f7931a; }
+.bigtech-card.otros   { border-left-color: var(--success); }
+.bigtech-header {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;
+}
+.bigtech-logo {
+  width: 44px; height: 44px; border-radius: 0.6rem;
+  background: var(--bg); display: flex; align-items: center;
+  justify-content: center; font-size: 1.4rem; flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+.bigtech-card.google  .bigtech-logo { color: #4285f4; }
+.bigtech-card.apple   .bigtech-logo { color: #555; }
+.bigtech-card.meta    .bigtech-logo { color: #1877f2; }
+.bigtech-card.cripto  .bigtech-logo { color: #f7931a; }
+.bigtech-card.otros   .bigtech-logo { color: var(--success); }
+.bigtech-header h4 { margin: 0 0 0.2rem; font-size: 0.97rem; color: var(--dark); }
+.bigtech-tag {
+  display: inline-block; font-size: 0.72rem; font-weight: 600;
+  padding: 0.18rem 0.55rem; border-radius: 1rem;
+  background: rgba(67,97,238,0.09); color: var(--primary);
+  border: 1px solid rgba(67,97,238,0.2);
+}
+.bigtech-steps { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.875rem; }
+.bigtech-step {
+  display: flex; align-items: flex-start; gap: 0.6rem;
+  font-size: 0.85rem; color: var(--dark); line-height: 1.5;
+}
+.step-dot {
+  min-width: 22px; height: 22px; border-radius: 50%;
+  background: var(--primary); color: white;
+  font-size: 0.72rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 0.1rem;
+}
+.bigtech-nota {
+  font-size: 0.82rem; padding: 0.6rem 0.875rem;
+  border-radius: 0.4rem; background: rgba(67,97,238,0.05);
+  border: 1px solid rgba(67,97,238,0.15); color: var(--gray);
+  display: flex; gap: 0.5rem; align-items: flex-start; line-height: 1.5;
+}
+.bigtech-nota i { flex-shrink: 0; margin-top: 0.1rem; }
+
+/* Conflicto legal box */
+.digital-conflicto-box {
+  background: rgba(217,83,79,0.05); border: 1px solid rgba(217,83,79,0.2);
+  border-radius: 0.75rem; padding: 1.25rem; margin-top: 1rem;
+}
+.digital-conflicto-box h4 { color: var(--danger); margin: 0 0 0.75rem; font-size: 0.97rem; }
+.digital-conflicto-box p { font-size: 0.87rem; color: var(--dark); margin: 0 0 0.5rem; line-height: 1.6; }
+.digital-conflicto-box p:last-child { margin-bottom: 0; }
+
+/* Will preview sección digital */
+.will-preview .section.digital-section .section-title {
+  color: #3f37c9;
+}
+
+/* Testamento de Activos Digitales — identidad visual propia (documento independiente) */
+.will-preview-digital {
+  border-color: rgba(63,55,201,0.25);
+  background: linear-gradient(180deg, rgba(63,55,201,0.03) 0%, #fff 120px);
+}
+.will-preview-digital .will-header {
+  border-bottom-color: rgba(63,55,201,0.2);
+  position: relative;
+}
+.will-preview-digital .section.digital-section {
+  border-left: 3px solid rgba(63,55,201,0.35);
+  padding-left: 1rem;
+}
+.will-badge-digital {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: rgba(63,55,201,0.1); color: #3f37c9;
+  border: 1px solid rgba(63,55,201,0.3);
+  border-radius: 999px; padding: 0.3rem 0.85rem;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em;
+  margin-bottom: 0.75rem;
+}
+.will-badge-digital i { font-size: 0.8rem; }
+
+@media print {
+  .will-badge-digital { display: none !important; }
+  .will-preview-digital { background: white; }
+}
+
+/* Responsive digital */
+@media (max-width: 768px) {
+  .diagrama-cuerpo { flex-direction: column; }
+  .diagrama-conector { padding-top: 0; padding-bottom: 0.5rem; transform: rotate(90deg); }
+  .clausula-header { flex-direction: column; align-items: flex-start; }
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- ========== MODAL DE CONFIRMACIÓN ========== -->
+  <div id="modal-confirmar" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-icon"><i class="fas fa-exclamation-triangle"></i></div>
+      <h3 id="modal-titulo">¿Confirmar acción?</h3>
+      <p id="modal-mensaje">Esta acción no se puede deshacer.</p>
+      <div class="modal-acciones">
+        <button class="btn-modal-cancelar" onclick="cerrarModal()">Cancelar</button>
+        <button class="btn-modal-confirmar" id="btn-modal-ok">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== HEADER ========== -->
+  <header class="app-header">
+    <div class="header-brand" onclick="mostrarPagina('inicio')">
+      <div class="header-logo"><i class="fas fa-scroll"></i></div>
+      <div>
+        <span class="header-title">Mi Testamento Virtual</span>
+        <span class="header-subtitle">Colombia · Código Civil · Art. 1055–1094</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== NAVEGACIÓN PRINCIPAL ========== -->
+  <nav>
+    <button data-pagina="inicio" onclick="mostrarPagina('inicio')">
+      <i class="fas fa-home"></i> Inicio
+    </button>
+    <button data-pagina="cliente" onclick="mostrarPagina('cliente')">
+      <i class="fas fa-file-alt"></i> Testamento Clásico
+    </button>
+    <button data-pagina="digital" onclick="mostrarPagina('digital')">
+      <i class="fas fa-laptop-code"></i> Testamento Digital
+    </button>
+    <button data-pagina="beneficios" onclick="mostrarPagina('beneficios')">
+      <i class="fas fa-star"></i> Beneficios
+    </button>
+  </nav>
+
+  <div class="container">
+
+    <!-- ========== PÁGINA: INICIO ========== -->
+    <div id="inicio" class="pagina active">
+      <div class="landing-hero">
+        <div class="landing-badge">Gratuito · Jurídico · Colombiano</div>
+        <h1>Redacta tu testamento<br><span class="landing-accent">con validez legal</span></h1>
+        <p class="landing-desc">Conforme al Código Civil Colombiano (Art. 1055–1094). Protege a tu familia,<br>evita conflictos sucesorios y deja constancia clara de tu voluntad.</p>
+        <div class="landing-actions">
+          <button class="btn-hero" onclick="mostrarPagina('cliente')">
+            <i class="fas fa-play-circle"></i> Testamento Clásico
+          </button>
+          <button class="btn-hero-outline" onclick="mostrarPagina('digital')">
+            <i class="fas fa-laptop-code"></i> Testamento Digital
+          </button>
+        </div>
+      </div>
+
+      <div class="landing-pasos">
+        <h2>¿Cómo funciona?</h2>
+        <div class="pasos-grid">
+          <div class="paso-card">
+            <div class="paso-num">1</div>
+            <div class="paso-icon"><i class="fas fa-user-edit"></i></div>
+            <h4>Registra tus datos</h4>
+            <p>Ingresa tu información personal, de contacto y familiar para identificarte como testador.</p>
+          </div>
+          <div class="paso-card">
+            <div class="paso-num">2</div>
+            <div class="paso-icon"><i class="fas fa-building"></i></div>
+            <h4>Declara tus bienes</h4>
+            <p>Lista tus inmuebles, vehículos, cuentas bancarias y otros activos que conforman tu patrimonio.</p>
+          </div>
+          <div class="paso-card">
+            <div class="paso-num">3</div>
+            <div class="paso-icon"><i class="fas fa-users"></i></div>
+            <h4>Designa beneficiarios</h4>
+            <p>Nombra a quienes recibirán tu herencia y asigna los porcentajes. La app valida las asignaciones forzosas.</p>
+          </div>
+          <div class="paso-card">
+            <div class="paso-num">4</div>
+            <div class="paso-icon"><i class="fas fa-file-contract"></i></div>
+            <h4>Genera e imprime</h4>
+            <p>Obtén el documento con lenguaje jurídico formal, listo para firma y protocolización notarial.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="landing-aviso">
+        <i class="fas fa-balance-scale"></i>
+        <div>
+          <strong>Aviso Legal:</strong> Este documento es un borrador orientativo. Para su plena validez jurídica,
+          debe ser firmado ante notario en presencia de testigos hábiles, conforme al Art. 1070 del Código Civil Colombiano.
+          No reemplaza asesoría jurídica profesional.
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== PÁGINA: TESTADOR ========== -->
+    <div id="cliente" class="pagina">
+      <h2><i class="fas fa-user-edit"></i> Registro del Testador</h2>
+      <div class="legal-note"><i class="fas fa-gavel"></i> Art. 1061 CC: Puede otorgar testamento toda persona mayor de 18 años que se encuentre en su sano juicio.</div>
+
+      <div class="progress-container">
+        <div class="progress-bar"><div class="progress-bar-active" id="progress-bar"></div></div>
+        <div class="progress-step active" id="step1"><span>1</span><span class="progress-label">Personales</span></div>
+        <div class="progress-step" id="step2"><span>2</span><span class="progress-label">Contacto</span></div>
+        <div class="progress-step" id="step3"><span>3</span><span class="progress-label">Familiares</span></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-personal" onclick="mostrarTab('datos-personales')">
+          <i class="fas fa-id-card"></i> Datos Personales
+        </button>
+        <button class="tab-btn disabled" id="tab-contact" onclick="mostrarTab('datos-contacto')">
+          <i class="fas fa-address-book"></i> Datos de Contacto
+        </button>
+        <button class="tab-btn disabled" id="tab-family" onclick="mostrarTab('datos-familiares')">
+          <i class="fas fa-home"></i> Datos Familiares
+        </button>
+      </div>
+
+      <!-- Pestaña: Datos Personales -->
+      <div id="datos-personales" class="tab-content">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tipo-documento" class="required">Tipo de Documento</label>
+            <select id="tipo-documento" required>
+              <option value="">Seleccione...</option>
+              <option value="Cédula de Ciudadanía">Cédula de Ciudadanía</option>
+              <option value="Pasaporte">Pasaporte</option>
+              <option value="Cédula de Extranjería">Cédula de Extranjería</option>
+              <option value="Tarjeta de Identidad">Tarjeta de Identidad</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="numero-documento" class="required">Número de Documento</label>
+            <input type="text" id="numero-documento" placeholder="Ej: 1.234.567.890" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="required">
+            Contraseña de acceso
+            <span class="tooltip-icon" data-tip="Esta contraseña protege sus datos. Guárdela en un lugar seguro."><i class="fas fa-question-circle"></i></span>
+          </label>
+          <div class="input-password-wrap">
+            <input type="password" id="password" placeholder="Mínimo 8 caracteres" required />
+            <button type="button" class="toggle-pw" onclick="togglePassword('password', this)"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nombre" class="required">Nombres</label>
+            <input type="text" id="nombre" placeholder="Ej: Juan Carlos" required />
+          </div>
+          <div class="form-group">
+            <label for="apellido" class="required">Apellidos</label>
+            <input type="text" id="apellido" placeholder="Ej: Pérez García" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="sexo" class="required">Sexo</label>
+            <select id="sexo" required>
+              <option value="">Seleccione...</option>
+              <option value="masculino">Masculino</option>
+              <option value="femenino">Femenino</option>
+              <option value="otro">Otro</option>
+              <option value="prefiero-no-decir">Prefiero no decir</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="fecha-nacimiento" class="required">
+              Fecha de Nacimiento
+              <span class="tooltip-icon" data-tip="Debe ser mayor de 18 años (Art. 1061 CC)."><i class="fas fa-question-circle"></i></span>
+            </label>
+            <input type="date" id="fecha-nacimiento" required />
+            <small id="edad-display" class="edad-display"></small>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="pais-nacimiento" class="required">País de Nacimiento</label>
+            <select id="pais-nacimiento" required>
+              <option value="">Seleccione...</option>
+              <option value="Colombia">Colombia</option>
+              <option value="Argentina">Argentina</option>
+              <option value="Brasil">Brasil</option>
+              <option value="Chile">Chile</option>
+              <option value="Ecuador">Ecuador</option>
+              <option value="México">México</option>
+              <option value="Perú">Perú</option>
+              <option value="Venezuela">Venezuela</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="departamento-nacimiento">Departamento de Nacimiento</label>
+            <select id="departamento-nacimiento">
+              <option value="">Seleccione...</option>
+              <option value="Antioquia">Antioquia</option>
+              <option value="Bogotá D.C.">Bogotá D.C.</option>
+              <option value="Valle del Cauca">Valle del Cauca</option>
+              <option value="Atlántico">Atlántico</option>
+              <option value="Bolívar">Bolívar</option>
+              <option value="Cundinamarca">Cundinamarca</option>
+              <option value="Santander">Santander</option>
+              <option value="Córdoba">Córdoba</option>
+              <option value="Nariño">Nariño</option>
+              <option value="Tolima">Tolima</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="municipio-nacimiento">Municipio de Nacimiento</label>
+            <input type="text" id="municipio-nacimiento" placeholder="Ej: Medellín" />
+          </div>
+          <div class="form-group">
+            <label for="nivel-estudio" class="required">Nivel de Estudio</label>
+            <select id="nivel-estudio" required>
+              <option value="">Seleccione...</option>
+              <option value="Ninguno">Ninguno</option>
+              <option value="Primaria">Primaria</option>
+              <option value="Secundaria">Secundaria</option>
+              <option value="Técnico">Técnico</option>
+              <option value="Tecnólogo">Tecnólogo</option>
+              <option value="Universitario">Universitario</option>
+              <option value="Posgrado">Posgrado</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;">
+          <button class="next-tab" onclick="avanzarPestana()">
+            Siguiente: Datos de Contacto <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pestaña: Datos de Contacto -->
+      <div id="datos-contacto" class="tab-content hidden">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="pais-residencia" class="required">País de Residencia</label>
+            <select id="pais-residencia" required>
+              <option value="">Seleccione...</option>
+              <option value="Colombia">Colombia</option>
+              <option value="Argentina">Argentina</option>
+              <option value="Brasil">Brasil</option>
+              <option value="Chile">Chile</option>
+              <option value="Ecuador">Ecuador</option>
+              <option value="México">México</option>
+              <option value="Perú">Perú</option>
+              <option value="Venezuela">Venezuela</option>
+              <option value="Estados Unidos">Estados Unidos</option>
+              <option value="España">España</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="departamento-residencia" class="required">Departamento</label>
+            <select id="departamento-residencia" required>
+              <option value="">Seleccione...</option>
+              <option value="Antioquia">Antioquia</option>
+              <option value="Bogotá D.C.">Bogotá D.C.</option>
+              <option value="Valle del Cauca">Valle del Cauca</option>
+              <option value="Atlántico">Atlántico</option>
+              <option value="Bolívar">Bolívar</option>
+              <option value="Cundinamarca">Cundinamarca</option>
+              <option value="Santander">Santander</option>
+              <option value="Córdoba">Córdoba</option>
+              <option value="Nariño">Nariño</option>
+              <option value="Tolima">Tolima</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="municipio-residencia" class="required">Municipio / Ciudad</label>
+            <input type="text" id="municipio-residencia" placeholder="Ej: Bogotá" required />
+          </div>
+          <div class="form-group">
+            <label for="celular" class="required">Número de Celular</label>
+            <input type="tel" id="celular" placeholder="Ej: +57 300 1234567" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="correo" class="required">Correo Electrónico</label>
+            <input type="email" id="correo" placeholder="Ej: juan@correo.com" required />
+          </div>
+          <div class="form-group">
+            <label for="confirmar-correo" class="required">Confirmar Correo</label>
+            <input type="email" id="confirmar-correo" placeholder="Repita su correo" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="direccion">Dirección de Residencia</label>
+          <textarea id="direccion" rows="2" placeholder="Calle, número, barrio, municipio, departamento"></textarea>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <button class="save" onclick="retrocederPestana()"><i class="fas fa-arrow-left"></i> Anterior</button>
+          <button class="next-tab" onclick="avanzarPestana()">Siguiente: Datos Familiares <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- Pestaña: Datos Familiares -->
+      <div id="datos-familiares" class="tab-content hidden">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="estado-civil">
+              Estado Civil
+              <span class="tooltip-icon" data-tip="El estado civil afecta las asignaciones forzosas (Art. 1226 CC). La porción conyugal es una asignación forzosa."><i class="fas fa-question-circle"></i></span>
+            </label>
+            <select id="estado-civil">
+              <option value="">Seleccione...</option>
+              <option value="Soltero/a">Soltero/a</option>
+              <option value="Casado/a">Casado/a</option>
+              <option value="Divorciado/a">Divorciado/a</option>
+              <option value="Viudo/a">Viudo/a</option>
+              <option value="Unión Libre">Unión Libre</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="nombre-conyuge">Nombre del Cónyuge / Compañero(a)</label>
+            <input type="text" id="nombre-conyuge" placeholder="Nombre completo (si aplica)" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="hijos">
+              Número de Hijos
+              <span class="tooltip-icon" data-tip="Los hijos son herederos forzosos con derecho a legítima (50% del patrimonio líquido, Art. 1240 CC modificado Ley 1934/2018)."><i class="fas fa-question-circle"></i></span>
+            </label>
+            <input type="number" id="hijos" min="0" value="0" />
+          </div>
+          <div class="form-group">
+            <label for="profesion">Profesión u Oficio</label>
+            <input type="text" id="profesion" placeholder="Ej: Ingeniero, Comerciante..." />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contacto-emergencia">Contacto de Emergencia</label>
+            <input type="text" id="contacto-emergencia" placeholder="Nombre completo" />
+          </div>
+          <div class="form-group">
+            <label for="telefono-emergencia">Teléfono de Emergencia</label>
+            <input type="tel" id="telefono-emergencia" placeholder="Número de contacto" />
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <button class="save" onclick="retrocederPestana()"><i class="fas fa-arrow-left"></i> Anterior</button>
+          <button class="save" onclick="guardarCliente()"><i class="fas fa-save"></i> Guardar Testador</button>
+        </div>
+      </div>
+
+      <div id="mensaje-exito-cliente" class="alert alert-success">
+        <i class="fas fa-check-circle"></i><div>Datos del testador guardados. Continúe con el registro de bienes.</div>
+      </div>
+      <div id="mensaje-error-cliente" class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i><div id="mensaje-error-texto">Por favor complete todos los campos obligatorios.</div>
+      </div>
+    </div>
+
+    <!-- ========== PÁGINA: BIENES ========== -->
+    <div id="bienes" class="pagina">
+      <h2><i class="fas fa-building"></i> Registro de Bienes</h2>
+      <div class="legal-note"><i class="fas fa-gavel"></i> Declare los bienes que componen su patrimonio. La declaración facilita la asignación precisa a herederos y reduce conflictos sucesorios.</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="bien-tipo" class="required">Tipo de Bien</label>
+          <select id="bien-tipo" required>
+            <option value="">Seleccione...</option>
+            <option value="Inmueble">Inmueble (casa, apartamento, lote, finca)</option>
+            <option value="Vehículo">Vehículo</option>
+            <option value="Cuenta bancaria">Cuenta bancaria / CDT / inversión</option>
+            <option value="Negocio">Negocio / establecimiento de comercio</option>
+            <option value="Derechos">Derechos y acciones</option>
+            <option value="Joyas y objetos">Joyas / obras de arte / objetos de valor</option>
+            <option value="Otros">Otros bienes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="bien-descripcion" class="required">Descripción del Bien</label>
+          <input type="text" id="bien-descripcion" placeholder="Ej: Casa ubicada en Cra 45 #20-10, Bogotá" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="bien-matricula">Matrícula / Placa / Número</label>
+          <input type="text" id="bien-matricula" placeholder="Ej: 050-123456 (matrícula inmobiliaria)" />
+        </div>
+        <div class="form-group">
+          <label for="bien-valor">Valor Estimado (COP)</label>
+          <input type="number" id="bien-valor" placeholder="Ej: 150000000" min="0" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="bien-notas">Observaciones</label>
+        <textarea id="bien-notas" rows="2" placeholder="Información adicional sobre el bien, estado, cargas, hipotecas, etc."></textarea>
+      </div>
+
+      <button class="save" onclick="guardarBien()">
+        <i class="fas fa-plus-circle"></i> Agregar Bien
+      </button>
+
+      <div id="mensaje-exito-bien" class="alert alert-success">
+        <i class="fas fa-check-circle"></i><div>Bien registrado exitosamente.</div>
+      </div>
+      <div id="mensaje-error-bien" class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i><div>Por favor complete los campos obligatorios.</div>
+      </div>
+
+      <div class="beneficiarios-list">
+        <div class="list-header">
+          <h3><i class="fas fa-list"></i> Bienes Registrados</h3>
+          <span id="bienes-count" class="count-badge">0 bienes</span>
+        </div>
+        <div id="bienes-container"></div>
+      </div>
+    </div>
+
+    <!-- ========== PÁGINA: BENEFICIARIOS ========== -->
+    <div id="beneficiario" class="pagina">
+      <h2><i class="fas fa-users"></i> Registro de Beneficiarios</h2>
+      <div class="legal-note"><i class="fas fa-gavel"></i> <strong>Asignaciones forzosas (Art. 1226 CC, Ley 1934/2018):</strong> Si tiene hijos, la mitad legitimaria (50%) corresponde a ellos obligatoriamente. El cuarto de mejoras (25%) puede asignarse libremente entre descendientes. El cuarto de libre disposición (25%) puede asignarse a cualquier persona.</div>
+
+      <div id="alerta-legitimaria" class="alert-legitimaria hidden"></div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="beneficiario-nombre" class="required">Nombre Completo</label>
+          <input type="text" id="beneficiario-nombre" placeholder="Ej: María López Sánchez" required />
+        </div>
+        <div class="form-group">
+          <label for="beneficiario-documento">Número de Documento</label>
+          <input type="text" id="beneficiario-documento" placeholder="Cédula u otro identificador" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="beneficiario-parentesco" class="required">Parentesco</label>
+          <select id="beneficiario-parentesco" required>
+            <option value="">Seleccione...</option>
+            <option value="Cónyuge / Compañero(a) permanente">Cónyuge / Compañero(a) permanente</option>
+            <option value="Hijo/a">Hijo/a</option>
+            <option value="Hijo/a adoptivo/a">Hijo/a adoptivo/a</option>
+            <option value="Padre / Madre">Padre / Madre</option>
+            <option value="Hermano/a">Hermano/a</option>
+            <option value="Nieto/a">Nieto/a</option>
+            <option value="Sobrino/a">Sobrino/a</option>
+            <option value="Amigo/a">Amigo/a</option>
+            <option value="Entidad benéfica">Entidad benéfica</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="beneficiario-tipo-asignacion">
+            Tipo de Asignación
+            <span class="tooltip-icon" data-tip="Legado: bien específico. Cuota herencial: porcentaje del total. Usufructo: uso temporal del bien."><i class="fas fa-question-circle"></i></span>
+          </label>
+          <select id="beneficiario-tipo-asignacion">
+            <option value="Cuota herencial">Cuota herencial (%)</option>
+            <option value="Legado específico">Legado específico (bien concreto)</option>
+            <option value="Usufructo">Usufructo vitalicio</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="beneficiario-porcentaje" class="required">Porcentaje de Herencia (%)</label>
+          <input type="number" id="beneficiario-porcentaje" min="1" max="100" placeholder="Ej: 25" required />
+          <small>Total acumulado no puede superar 100%</small>
+        </div>
+        <div class="form-group">
+          <label for="beneficiario-bien-legado">Bien en Legado (si aplica)</label>
+          <input type="text" id="beneficiario-bien-legado" placeholder="Ej: Casa ubicada en Cra 45 #20-10" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="beneficiario-contacto">Información de Contacto</label>
+        <textarea id="beneficiario-contacto" rows="2" placeholder="Teléfono, correo, dirección del beneficiario"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="beneficiario-notas">Condiciones o Notas Especiales</label>
+        <textarea id="beneficiario-notas" rows="2" placeholder="Ej: Recibirá este bien cuando cumpla 25 años / condición especial..."></textarea>
+      </div>
+
+      <div id="badge-porcentaje" class="porcentaje-total warn">
+        <i class="fas fa-info-circle"></i> Total asignado: 0% — Faltan 100%
+      </div>
+
+      <button class="save" onclick="guardarBeneficiario()">
+        <i class="fas fa-user-plus"></i> Agregar Beneficiario
+      </button>
+
+      <div id="mensaje-exito-beneficiario" class="alert alert-success">
+        <i class="fas fa-check-circle"></i><div>Beneficiario registrado exitosamente.</div>
+      </div>
+      <div id="mensaje-error-beneficiario" class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i><div>Por favor complete los campos obligatorios.</div>
+      </div>
+
+      <div class="beneficiarios-list" id="lista-beneficiarios">
+        <div class="list-header">
+          <h3><i class="fas fa-list"></i> Beneficiarios Registrados</h3>
+          <span id="beneficiarios-count" class="count-badge">0</span>
+        </div>
+        <div id="beneficiarios-container"></div>
+      </div>
+    </div>
+
+    <!-- ========== PÁGINA: TESTAMENTO ========== -->
+    <div id="testamento" class="pagina">
+      <h2><i class="fas fa-file-contract"></i> Vista Previa del Testamento</h2>
+
+      <!-- Albacea -->
+      <div class="albacea-section">
+        <h4><i class="fas fa-gavel"></i> Designación de Albacea</h4>
+        <div class="legal-note-sm"><i class="fas fa-info-circle"></i> Art. 1327 CC: El albacea es la persona encargada de cumplir las disposiciones testamentarias. Puede ser cualquier persona capaz de obligarse.</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="albacea-nombre">Nombre del Albacea</label>
+            <input type="text" id="albacea-nombre" placeholder="Nombre completo" />
+          </div>
+          <div class="form-group">
+            <label for="albacea-documento">Documento del Albacea</label>
+            <input type="text" id="albacea-documento" placeholder="Número de documento" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="sustituto-nombre">Albacea Sustituto</label>
+            <input type="text" id="sustituto-nombre" placeholder="Nombre del sustituto (si aplica)" />
+          </div>
+          <div class="form-group">
+            <label for="albacea-facultades">Facultades del Albacea</label>
+            <select id="albacea-facultades">
+              <option value="generales">Facultades generales de administración</option>
+              <option value="cobro">Cobro de deudas activas</option>
+              <option value="pago">Pago de deudas hereditarias</option>
+              <option value="plenas">Plenas facultades testamentarias</option>
+            </select>
+          </div>
+        </div>
+        <button class="save" onclick="guardarAlbacea()"><i class="fas fa-save"></i> Guardar Albacea</button>
+        <div id="mensaje-exito-albacea" class="alert alert-success" style="margin-top:0.75rem;">
+          <i class="fas fa-check-circle"></i><div>Albacea guardado exitosamente.</div>
+        </div>
+        <div id="mensaje-error-albacea" class="alert alert-error" style="margin-top:0.75rem;">
+          <i class="fas fa-exclamation-circle"></i><div>Ingrese al menos el nombre del albacea.</div>
+        </div>
+      </div>
+
+      <!-- Testigos -->
+      <div class="albacea-section">
+        <h4><i class="fas fa-user-friends"></i> Testigos Instrumentales</h4>
+        <div class="legal-note-sm"><i class="fas fa-info-circle"></i> Art. 1070 CC: El testamento abierto requiere mínimo 3 testigos hábiles o Notario + 3 testigos. Los testigos deben ser mayores de 18 años y no inhabilitados (Art. 1068 CC).</div>
+        <div id="testigos-container">
+          <div class="testigo-row form-row" id="testigo-1">
+            <div class="form-group"><label>Testigo 1 — Nombre</label><input type="text" id="testigo1-nombre" placeholder="Nombre completo" /></div>
+            <div class="form-group"><label>Testigo 1 — Documento</label><input type="text" id="testigo1-documento" placeholder="Número de documento" /></div>
+          </div>
+          <div class="testigo-row form-row" id="testigo-2">
+            <div class="form-group"><label>Testigo 2 — Nombre</label><input type="text" id="testigo2-nombre" placeholder="Nombre completo" /></div>
+            <div class="form-group"><label>Testigo 2 — Documento</label><input type="text" id="testigo2-documento" placeholder="Número de documento" /></div>
+          </div>
+          <div class="testigo-row form-row" id="testigo-3">
+            <div class="form-group"><label>Testigo 3 — Nombre</label><input type="text" id="testigo3-nombre" placeholder="Nombre completo" /></div>
+            <div class="form-group"><label>Testigo 3 — Documento</label><input type="text" id="testigo3-documento" placeholder="Número de documento" /></div>
+          </div>
+        </div>
+        <button class="save" onclick="guardarTestigos()"><i class="fas fa-save"></i> Guardar Testigos</button>
+        <div id="mensaje-exito-testigos" class="alert alert-success" style="margin-top:0.75rem;">
+          <i class="fas fa-check-circle"></i><div>Testigos guardados.</div>
+        </div>
+      </div>
+
+      <!-- Vista previa -->
+      <div class="will-preview" id="vista-previa-testamento">
+        <div class="will-header">
+          <h3>TESTAMENTO ABIERTO</h3>
+          <p class="will-subtitle">Conforme al Art. 1070 del Código Civil Colombiano</p>
+        </div>
+
+        <div class="section">
+          <div class="section-title">I. IDENTIFICACIÓN DEL TESTADOR</div>
+          <p>Yo, <strong><span id="testador-nombre-completo"></span></strong>, identificado(a) con <span id="testador-documento"></span>, nacido(a) el <span id="testador-nacimiento"></span>, de estado civil <span id="testador-estado-civil"></span>, domiciliado(a) en <span id="testador-domicilio"></span>, declaro que me encuentro en pleno uso de mis facultades mentales y que otorgo el presente testamento de manera libre, voluntaria y espontánea.</p>
+        </div>
+
+        <div class="section">
+          <div class="section-title">II. REVOCACIÓN DE TESTAMENTOS ANTERIORES</div>
+          <p>Por medio del presente instrumento, revoco y anulo expresamente cualquier testamento, codicilo o disposición de última voluntad que hubiere otorgado con anterioridad a esta fecha, los cuales quedan sin ningún valor ni efecto jurídico.</p>
+        </div>
+
+        <div class="section">
+          <div class="section-title">III. PATRIMONIO DECLARADO</div>
+          <div id="bienes-testamento"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">IV. DISPOSICIONES SOBRE LA HERENCIA</div>
+          <div id="beneficiarios-testamento"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">V. DESIGNACIÓN DE ALBACEA</div>
+          <p>Designo como albacea testamentario a <strong><span id="albacea-nombre-preview"></span></strong>, identificado(a) con documento <span id="albacea-documento-preview"></span>, a quien otorgo las siguientes facultades: <span id="albacea-facultades-preview"></span>. En caso de que el albacea designado no pueda o no quiera ejercer el cargo, designo como sustituto a <strong><span id="sustituto-nombre-preview"></span></strong>.</p>
+        </div>
+
+        <div class="section">
+          <div class="section-title">VI. TESTIGOS INSTRUMENTALES</div>
+          <div id="testigos-preview"></div>
+        </div>
+
+        <div class="section will-firma">
+          <div class="section-title">VII. CIERRE Y FIRMA</div>
+          <p>El presente testamento fue leído en voz alta en presencia de los testigos aquí mencionados, quienes declararon no tener impedimento para serlo conforme al Art. 1068 del Código Civil Colombiano.</p>
+          <p><strong>Fecha de elaboración:</strong> <span id="fecha-testamento"></span></p>
+          <p><strong>Lugar:</strong> <span id="lugar-testamento"></span></p>
+          <div class="firma-grid">
+            <div class="firma-box"><div class="firma-linea"></div><span>Firma del Testador</span><span id="firma-testador-nombre"></span></div>
+            <div class="firma-box"><div class="firma-linea"></div><span>Firma Testigo 1</span><span id="firma-testigo1"></span></div>
+            <div class="firma-box"><div class="firma-linea"></div><span>Firma Testigo 2</span><span id="firma-testigo2"></span></div>
+            <div class="firma-box"><div class="firma-linea"></div><span>Firma Testigo 3</span><span id="firma-testigo3"></span></div>
+            <div class="firma-box"><div class="firma-linea"></div><span>Firma Notario / Huella</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acciones-testamento">
+        <button class="print-btn" onclick="imprimirTestamento()"><i class="fas fa-print"></i> Imprimir</button>
+        <button class="btn-exportar" onclick="exportarTexto()"><i class="fas fa-file-alt"></i> Exportar texto</button>
+        <button class="btn-refrescar" onclick="cargarVistaPreviaTestamento()"><i class="fas fa-sync-alt"></i> Actualizar vista</button>
+      </div>
+    </div>
+
+    <!-- ========== PÁGINA: ACTIVOS DIGITALES ========== -->
+    <div id="digital" class="pagina">
+      <h2><i class="fas fa-laptop-code"></i> Testamento de Activos Digitales</h2>
+
+      <div class="legal-note">
+        <i class="fas fa-gavel"></i>
+        <div>En Colombia no existe una ley específica de herencia digital. Se aplica el <strong>Código Civil</strong>, la <strong>Ley 527/1999</strong> (comercio electrónico) y la <strong>Ley 1581/2012</strong> (protección de datos). Los activos digitales con valor económico (criptomonedas, cuentas bancarias online) entran en la masa herencial como bienes intangibles. Las directrices sobre perfiles y archivos se incluyen como cláusulas en el testamento ordinario.
+        </div>
+      </div>
+
+      <!-- TABS DIGITAL -->
+      <div class="tabs" id="tabs-digital">
+        <button class="tab-btn active" id="dtab-albacea" onclick="mostrarTabDigital('dTab-albacea-content')">
+          <i class="fas fa-user-shield"></i> Albacea Digital
+        </button>
+        <button class="tab-btn" id="dtab-activos" onclick="mostrarTabDigital('dTab-activos-content')">
+          <i class="fas fa-coins"></i> Mis Activos
+        </button>
+        <button class="tab-btn" id="dtab-clausulas" onclick="mostrarTabDigital('dTab-clausulas-content')">
+          <i class="fas fa-file-signature"></i> Cláusulas Notariales
+        </button>
+        <button class="tab-btn" id="dtab-bigtech" onclick="mostrarTabDigital('dTab-bigtech-content')">
+          <i class="fas fa-globe"></i> Guía Big Tech
+        </button>
+        <button class="tab-btn" id="dtab-preview" onclick="mostrarTabDigital('dTab-preview-content')">
+          <i class="fas fa-file-contract"></i> Vista Previa y Firma
+        </button>
+      </div>
+
+      <!-- ===== TAB 1: ALBACEA DIGITAL ===== -->
+      <div id="dTab-albacea-content" class="tab-content">
+        <div class="digital-info-box">
+          <i class="fas fa-info-circle"></i>
+          <div>El <strong>Albacea Digital</strong> es la persona de confianza que gestionará tu huella digital. Al no estar regulado en Colombia, se nombra dentro del testamento ordinario abierto ante Notario, con instrucciones expresas. Sus funciones: administrar, cerrar, migrar o convertir en conmemorativas las cuentas digitales.</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="albacea-digital-nombre" class="required">Nombre del Albacea Digital</label>
+            <input type="text" id="albacea-digital-nombre" placeholder="Nombre completo de la persona de confianza" required />
+          </div>
+          <div class="form-group">
+            <label for="albacea-digital-documento" class="required">Número de Documento (C.C.)</label>
+            <input type="text" id="albacea-digital-documento" placeholder="Ej: 1.234.567.890" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="albacea-digital-correo">Correo Electrónico del Albacea</label>
+            <input type="email" id="albacea-digital-correo" placeholder="correo@ejemplo.com" />
+          </div>
+          <div class="form-group">
+            <label for="albacea-digital-telefono">Teléfono del Albacea</label>
+            <input type="tel" id="albacea-digital-telefono" placeholder="+57 300 000 0000" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="albacea-digital-facultades">Facultades otorgadas al Albacea Digital</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" id="fac-administrar" checked> Administrar y gestionar cuentas y perfiles</label>
+            <label class="checkbox-item"><input type="checkbox" id="fac-cerrar" checked> Cancelar suscripciones y servicios de pago</label>
+            <label class="checkbox-item"><input type="checkbox" id="fac-transferir" checked> Transferir activos financieros digitales</label>
+            <label class="checkbox-item"><input type="checkbox" id="fac-conmemorativa"> Convertir perfiles sociales en cuentas conmemorativas</label>
+            <label class="checkbox-item"><input type="checkbox" id="fac-eliminar"> Eliminar definitivamente perfiles y archivos privados</label>
+            <label class="checkbox-item"><input type="checkbox" id="fac-cripto"> Gestionar recuperación de criptomonedas y exchanges</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="albacea-digital-instrucciones">Instrucciones especiales adicionales</label>
+          <textarea id="albacea-digital-instrucciones" rows="3" placeholder="Ej: Conservar el archivo de fotos familiares de Google Drive y entregarlo a mis hijos. Eliminar todos los mensajes privados sin leerlos."></textarea>
+        </div>
+        <button class="save" onclick="guardarAlbaceaDigital()">
+          <i class="fas fa-save"></i> Guardar Albacea Digital
+        </button>
+        <div id="msg-exito-albacea-digital" class="alert alert-success" style="margin-top:0.75rem;">
+          <i class="fas fa-check-circle"></i><div>Albacea digital guardado correctamente.</div>
+        </div>
+        <div id="msg-error-albacea-digital" class="alert alert-error" style="margin-top:0.75rem;">
+          <i class="fas fa-exclamation-circle"></i><div>Complete el nombre y documento del albacea digital.</div>
+        </div>
+      </div>
+
+      <!-- ===== TAB 2: MIS ACTIVOS DIGITALES ===== -->
+      <div id="dTab-activos-content" class="tab-content hidden">
+        <div class="digital-info-box">
+          <i class="fas fa-info-circle"></i>
+          <div>Registra todos tus activos digitales para que el albacea sepa qué gestionar. Los activos con valor económico (criptomonedas, cuentas bancarias online) entran en la masa herencial. <strong>No escribas contraseñas aquí</strong> — solo la información de identificación necesaria para que el albacea pueda localizarlos.</div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="activo-digital-tipo" class="required">Categoría del Activo</label>
+            <select id="activo-digital-tipo" required onchange="actualizarSubtipo()">
+              <option value="">Seleccione categoría...</option>
+              <optgroup label="💰 Bienes Económicos">
+                <option value="Criptomonedas / NFTs">Criptomonedas / NFTs (Bitcoin, Ethereum, etc.)</option>
+                <option value="Banca digital">Cuenta de banca digital / neobancos</option>
+                <option value="Billetera digital">Billetera digital (PayPal, Nequi, Daviplata)</option>
+                <option value="Inversiones online">Inversiones / regalías online (YouTube, Twitch)</option>
+              </optgroup>
+              <optgroup label="👤 Cuentas y Perfiles">
+                <option value="Red social">Red social (Facebook, Instagram, TikTok, X)</option>
+                <option value="Correo electrónico">Correo electrónico (Gmail, Outlook, Yahoo)</option>
+                <option value="Blog / sitio web">Blog o sitio web personal</option>
+                <option value="Cuenta gaming">Cuenta de videojuegos / gaming</option>
+              </optgroup>
+              <optgroup label="☁️ Archivos en la Nube">
+                <option value="Almacenamiento nube">Almacenamiento en nube (Google Drive, iCloud, Dropbox)</option>
+                <option value="Fotos y videos">Galería de fotos / videos (Google Fotos, iCloud Fotos)</option>
+                <option value="Documentos confidenciales">Documentos confidenciales digitales</option>
+              </optgroup>
+              <optgroup label="📺 Suscripciones">
+                <option value="Streaming">Streaming (Netflix, Spotify, Disney+, Amazon Prime)</option>
+                <option value="Software / licencias">Software / licencias digitales</option>
+                <option value="Suscripcion otro">Otra suscripción de pago</option>
+              </optgroup>
+              <optgroup label="📦 Otros">
+                <option value="Dominio web">Dominio web / hosting</option>
+                <option value="Activo digital otro">Otro activo digital</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="activo-digital-plataforma" class="required">Plataforma / Nombre del Servicio</label>
+            <input type="text" id="activo-digital-plataforma" placeholder="Ej: Binance, Gmail, Netflix, iCloud" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="activo-digital-identificador">Identificador de la cuenta</label>
+            <input type="text" id="activo-digital-identificador" placeholder="Usuario, correo asociado o número de cuenta (sin contraseña)" />
+          </div>
+          <div class="form-group">
+            <label for="activo-digital-valor">Valor estimado (COP) — si aplica</label>
+            <input type="number" id="activo-digital-valor" placeholder="Ej: 5000000" min="0" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="activo-digital-instruccion">Instrucción al Albacea Digital</label>
+          <select id="activo-digital-instruccion">
+            <option value="Transferir a herederos">Transferir saldo / activos a herederos</option>
+            <option value="Convertir en conmemorativa">Convertir en cuenta conmemorativa</option>
+            <option value="Eliminar definitivamente">Eliminar / cerrar definitivamente</option>
+            <option value="Cancelar suscripcion">Cancelar suscripción y evitar cobros</option>
+            <option value="Descargar y entregar">Descargar archivos y entregar a familia</option>
+            <option value="Mantener activa">Mantener activa (especificar en notas)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="activo-digital-notas">Notas o instrucciones específicas</label>
+          <textarea id="activo-digital-notas" rows="2" placeholder="Ej: Transferir fondos a la cuenta del heredero principal. La semilla de recuperación está en sobre sellado con el notario."></textarea>
+        </div>
+
+        <button class="save" onclick="guardarActivoDigital()">
+          <i class="fas fa-plus-circle"></i> Agregar Activo Digital
+        </button>
+
+        <div id="msg-exito-activo-digital" class="alert alert-success">
+          <i class="fas fa-check-circle"></i><div>Activo digital registrado.</div>
+        </div>
+        <div id="msg-error-activo-digital" class="alert alert-error">
+          <i class="fas fa-exclamation-circle"></i><div>Complete la categoría y el nombre de la plataforma.</div>
+        </div>
+
+        <div class="beneficiarios-list">
+          <div class="list-header">
+            <h3><i class="fas fa-list"></i> Activos Digitales Registrados</h3>
+            <span id="activos-digitales-count" class="count-badge">0</span>
+          </div>
+          <div id="activos-digitales-container"></div>
+        </div>
+      </div>
+
+      <!-- ===== TAB 3: CLÁUSULAS NOTARIALES ===== -->
+      <div id="dTab-clausulas-content" class="tab-content hidden">
+        <div class="digital-info-box warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div><strong>Estrategia "Dos Mundos":</strong> Ante el vacío legal en Colombia, la protección efectiva requiere combinar el <strong>Mundo Jurídico</strong> (testamento ante notario con cláusulas específicas) y el <strong>Mundo Tecnológico</strong> (configurar herramientas post-mortem en cada plataforma). Ninguna solución por sí sola es suficiente.</div>
+        </div>
+
+        <!-- Diagrama dos mundos -->
+        <div class="dos-mundos-diagram">
+          <div class="diagrama-titulo">TU HERENCIA DIGITAL BLINDADA</div>
+          <div class="diagrama-cuerpo">
+            <div class="diagrama-rama">
+              <div class="diagrama-rama-titulo legal-mundo"><i class="fas fa-balance-scale"></i> MUNDO JURÍDICO TRADICIONAL<br><small>(El Notario Colombiano)</small></div>
+              <div class="diagrama-rama-items">
+                <div class="diagrama-item"><i class="fas fa-check"></i> Cláusulas testamentarias específicas</div>
+                <div class="diagrama-item"><i class="fas fa-check"></i> Nombramiento de albacea digital</div>
+                <div class="diagrama-item"><i class="fas fa-check"></i> Validez legal ante herederos y jueces</div>
+              </div>
+            </div>
+            <div class="diagrama-conector"><i class="fas fa-plus-circle"></i></div>
+            <div class="diagrama-rama">
+              <div class="diagrama-rama-titulo tech-mundo"><i class="fas fa-globe"></i> MUNDO TECNOLÓGICO INTERNACIONAL<br><small>(Configuración en Plataformas)</small></div>
+              <div class="diagrama-rama-items">
+                <div class="diagrama-item"><i class="fas fa-check"></i> Contactos de legado (Apple/Meta)</div>
+                <div class="diagrama-item"><i class="fas fa-check"></i> Gestor de cuentas inactivas (Google)</div>
+                <div class="diagrama-item"><i class="fas fa-check"></i> Custodia segura de llaves cripto</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h4 style="color:var(--primary);margin:1.5rem 0 0.75rem;"><i class="fas fa-file-signature"></i> Cláusulas modelo para incluir en tu testamento notarial</h4>
+        <p style="font-size:0.87rem;color:var(--gray);margin-bottom:1.25rem;">Marca las cláusulas que quieres incorporar a tu <strong>Testamento de Activos Digitales</strong>. Solo las seleccionadas se incluirán en el documento final (pestaña "Vista Previa y Firma") y en el PDF generado. También puedes copiarlas para presentarlas al asesor notarial.</p>
+
+        <div class="clausula-card" id="clausula-albacea-digital">
+          <div class="clausula-header">
+            <label class="clausula-check"><input type="checkbox" id="check-clausula-A" checked onchange="guardarSeleccionClausulas()" /></label>
+            <div class="clausula-num">Cláusula A</div>
+            <div class="clausula-titulo">Designación de Albacea Digital</div>
+            <button class="btn-copiar-clausula" onclick="copiarClausula('clausula-albacea-digital-texto')"><i class="fas fa-copy"></i> Copiar</button>
+          </div>
+          <div class="clausula-texto" id="clausula-albacea-digital-texto"></div>
+        </div>
+
+        <div class="clausula-card">
+          <div class="clausula-header">
+            <label class="clausula-check"><input type="checkbox" id="check-clausula-B" checked onchange="guardarSeleccionClausulas()" /></label>
+            <div class="clausula-num">Cláusula B</div>
+            <div class="clausula-titulo">Acceso a Activos Financieros Digitales</div>
+            <button class="btn-copiar-clausula" onclick="copiarClausula('clausula-financiera-texto')"><i class="fas fa-copy"></i> Copiar</button>
+          </div>
+          <div class="clausula-texto" id="clausula-financiera-texto">
+            "Es mi voluntad expresa que los fondos económicos contenidos en plataformas digitales, pasarelas de pago, neobancos y activos criptográficos (criptomonedas o tokens) de mi propiedad, sean cuantificados y transferidos a favor de mis herederos legítimos conforme a las cuotas de ley, autorizando al Albacea Digital a realizar las gestiones técnicas de recuperación necesarias ante los exchanges o custodios internacionales."
+          </div>
+        </div>
+
+        <div class="clausula-card">
+          <div class="clausula-header">
+            <label class="clausula-check"><input type="checkbox" id="check-clausula-C" onchange="guardarSeleccionClausulas()" /></label>
+            <div class="clausula-num">Cláusula C</div>
+            <div class="clausula-titulo">Mandato de Destrucción de Datos Privados <span style="font-size:0.75rem;color:var(--gray);">(Opcional)</span></div>
+            <button class="btn-copiar-clausula" onclick="copiarClausula('clausula-destruccion-texto')"><i class="fas fa-copy"></i> Copiar</button>
+          </div>
+          <div class="clausula-texto" id="clausula-destruccion-texto">
+            "Instruyo expresamente a mi Albacea Digital a proceder con la eliminación definitiva y permanente, sin visualización previa por parte de terceros ni familiares, de mis archivos locales en dispositivos físicos y cuentas de mensajería instantánea (WhatsApp, Telegram), protegiendo así mi derecho a la intimidad póstuma."
+          </div>
+        </div>
+
+        <div class="clausula-card">
+          <div class="clausula-header">
+            <label class="clausula-check"><input type="checkbox" id="check-clausula-D" checked onchange="guardarSeleccionClausulas()" /></label>
+            <div class="clausula-num">Cláusula D</div>
+            <div class="clausula-titulo">Autorización de Datos Personales Post-Mortem (Ley 1581/2012)</div>
+            <button class="btn-copiar-clausula" onclick="copiarClausula('clausula-datos-texto')"><i class="fas fa-copy"></i> Copiar</button>
+          </div>
+          <div class="clausula-texto" id="clausula-datos-texto">
+            "En virtud de la Ley 1581 de 2012 y ante la intransferibilidad de los derechos sobre datos personales, autorizo expresamente al Albacea Digital designado en el presente instrumento para que, una vez acreditado mi fallecimiento mediante acta de defunción, pueda solicitar ante entidades colombianas y plataformas internacionales el acceso, descarga, transferencia o eliminación de mis datos personales almacenados en medios digitales, sin necesidad de orden judicial adicional."
+          </div>
+        </div>
+
+        <div id="msg-copiar" class="alert alert-success" style="margin-top:0.75rem;">
+          <i class="fas fa-check-circle"></i><div>Cláusula copiada al portapapeles.</div>
+        </div>
+      </div>
+
+      <!-- ===== TAB 4: GUÍA BIG TECH ===== -->
+      <div id="dTab-bigtech-content" class="tab-content hidden">
+        <div class="digital-info-box warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div><strong>Conflicto legal clave:</strong> Las Big Tech operan bajo leyes de EE.UU. o la UE. Sus Términos y Condiciones (TOS) suelen estipular que las cuentas son <strong>personales e intransferibles</strong> y el derecho de uso se extingue con la muerte. Un testamento notarial colombiano no obliga a estas empresas. Por eso debes configurar las herramientas digitales dentro de cada plataforma.</div>
+        </div>
+
+        <h4 style="color:var(--primary);margin:0 0 1rem;"><i class="fas fa-cogs"></i> Configuración Post-Mortem por Plataforma</h4>
+
+        <div class="bigtech-grid">
+          <div class="bigtech-card google">
+            <div class="bigtech-header">
+              <div class="bigtech-logo"><i class="fab fa-google"></i></div>
+              <div>
+                <h4>Google / Gmail / Drive</h4>
+                <span class="bigtech-tag">Administrador de Cuentas Inactivas</span>
+              </div>
+            </div>
+            <div class="bigtech-steps">
+              <div class="bigtech-step"><span class="step-dot">1</span> Ve a <strong>myaccount.google.com</strong> → "Datos y privacidad"</div>
+              <div class="bigtech-step"><span class="step-dot">2</span> Busca <strong>"Administrador de cuentas inactivas"</strong></div>
+              <div class="bigtech-step"><span class="step-dot">3</span> Elige un plazo de inactividad (ej. 3 o 6 meses)</div>
+              <div class="bigtech-step"><span class="step-dot">4</span> Añade el <strong>correo de tu albacea digital</strong> como contacto de confianza</div>
+              <div class="bigtech-step"><span class="step-dot">5</span> Selecciona qué datos compartir: Drive, Gmail, Fotos</div>
+            </div>
+            <div class="bigtech-nota"><i class="fas fa-lightbulb"></i> Tus datos se compartirán automáticamente tras el período de inactividad. No requiere intervención judicial.</div>
+          </div>
+
+          <div class="bigtech-card apple">
+            <div class="bigtech-header">
+              <div class="bigtech-logo"><i class="fab fa-apple"></i></div>
+              <div>
+                <h4>Apple / iCloud</h4>
+                <span class="bigtech-tag">Contacto para Legado (Digital Legacy)</span>
+              </div>
+            </div>
+            <div class="bigtech-steps">
+              <div class="bigtech-step"><span class="step-dot">1</span> Ve a <strong>Configuración</strong> → Tu nombre → <strong>"Inicio de sesión y seguridad"</strong></div>
+              <div class="bigtech-step"><span class="step-dot">2</span> Toca <strong>"Contacto para legado"</strong> y agrega a tu albacea</div>
+              <div class="bigtech-step"><span class="step-dot">3</span> El sistema genera una <strong>clave de acceso única</strong> — entrégala al albacea o al notario</div>
+              <div class="bigtech-step"><span class="step-dot">4</span> Tras el fallecimiento, el heredero presenta el acta de defunción + la clave para acceder</div>
+            </div>
+            <div class="bigtech-nota"><i class="fas fa-lightbulb"></i> Da acceso a fotos, mensajes, notas y copias de seguridad de iCloud. La clave de acceso es indispensable.</div>
+          </div>
+
+          <div class="bigtech-card meta">
+            <div class="bigtech-header">
+              <div class="bigtech-logo"><i class="fab fa-facebook"></i></div>
+              <div>
+                <h4>Meta / Facebook / Instagram</h4>
+                <span class="bigtech-tag">Contacto de Legado</span>
+              </div>
+            </div>
+            <div class="bigtech-steps">
+              <div class="bigtech-step"><span class="step-dot">1</span> Facebook: <strong>Configuración</strong> → "Información personal" → "Información de legado"</div>
+              <div class="bigtech-step"><span class="step-dot">2</span> Elige si tu cuenta debe ser <strong>conmemorativa</strong> o <strong>eliminada</strong></div>
+              <div class="bigtech-step"><span class="step-dot">3</span> Designa un <strong>Contacto de Legado</strong> que podrá gestionar el perfil conmemorativo</div>
+            </div>
+            <div class="bigtech-nota"><i class="fas fa-exclamation-triangle" style="color:var(--warning)"></i> El Contacto de Legado <strong>no puede leer mensajes privados (DM)</strong>. Solo gestiona el perfil público.</div>
+          </div>
+
+          <div class="bigtech-card cripto">
+            <div class="bigtech-header">
+              <div class="bigtech-logo"><i class="fab fa-bitcoin"></i></div>
+              <div>
+                <h4>Criptomonedas (Binance, Coinbase, Metamask)</h4>
+                <span class="bigtech-tag">Alta prioridad — Sin recuperación sin semilla</span>
+              </div>
+            </div>
+            <div class="bigtech-steps">
+              <div class="bigtech-step"><span class="step-dot">1</span> <strong>Exchange centralizado</strong> (Binance/Coinbase): herederos deben presentar sucesión legal traducida y apostillada</div>
+              <div class="bigtech-step"><span class="step-dot">2</span> <strong>Billetera fría / sin custodia</strong> (Metamask/Ledger): anota las <strong>palabras semilla (seed phrase)</strong> de 12 o 24 palabras</div>
+              <div class="bigtech-step"><span class="step-dot">3</span> Guarda la semilla en sobre sellado ante notario o en caja fuerte física accesible al albacea</div>
+            </div>
+            <div class="bigtech-nota"><i class="fas fa-exclamation-circle" style="color:var(--danger)"></i> <strong>Sin la semilla, ninguna ley recupera los fondos.</strong> Si las criptos están en billetera sin custodia y se pierde la semilla, son irrecuperables.</div>
+          </div>
+
+          <div class="bigtech-card otros">
+            <div class="bigtech-header">
+              <div class="bigtech-logo"><i class="fas fa-stream"></i></div>
+              <div>
+                <h4>Suscripciones (Netflix, Spotify, Amazon)</h4>
+                <span class="bigtech-tag">Cancelar para evitar cobros posteriores</span>
+              </div>
+            </div>
+            <div class="bigtech-steps">
+              <div class="bigtech-step"><span class="step-dot">1</span> Registra cada suscripción activa en la pestaña <strong>"Mis Activos"</strong> con instrucción de cancelación</div>
+              <div class="bigtech-step"><span class="step-dot">2</span> Informa al albacea digital el correo asociado a cada suscripción</div>
+              <div class="bigtech-step"><span class="step-dot">3</span> El albacea debe cancelar antes del siguiente ciclo de facturación para evitar cargos</div>
+            </div>
+            <div class="bigtech-nota"><i class="fas fa-lightbulb"></i> Muchas plataformas permiten solicitar reembolso proporcional. El albacea puede hacerlo con el acta de defunción.</div>
+          </div>
+        </div>
+
+        <div class="digital-conflicto-box">
+          <h4><i class="fas fa-balance-scale"></i> El Gran Conflicto Legal: ¿Ley Local vs. Contrato de la Plataforma?</h4>
+          <p>El Código Civil colombiano establece que los herederos legítimos tienen derecho a todo el patrimonio del fallecido. Sin embargo, al crear cuentas en plataformas internacionales, el usuario acepta Términos y Condiciones (TOS) que establecen que las cuentas son <strong>personales e intransferibles</strong>.</p>
+          <p>En la práctica, las Big Tech suelen imponer sus contratos por encima de ordenamientos jurídicos locales. <strong>La solución es combinar ambos mundos:</strong> cláusulas notariales + configuración tecnológica en cada plataforma.</p>
+        </div>
+      </div>
+
+      <!-- ===== TAB 5: VISTA PREVIA Y FIRMA (Testamento de Activos Digitales) ===== -->
+      <div id="dTab-preview-content" class="tab-content hidden">
+        <div class="digital-info-box">
+          <i class="fas fa-info-circle"></i>
+          <div>Este es tu <strong>Testamento de Activos Digitales</strong>, un documento independiente del testamento general. Completa tu identificación como testador para generar el documento; el Albacea Digital y los Activos Digitales ya registrados se incorporan automáticamente.</div>
+        </div>
+
+        <!-- Identificación del testador (propia del testamento digital) -->
+        <div class="albacea-section">
+          <h4><i class="fas fa-id-card"></i> Identificación del Testador (Testamento Digital)</h4>
+          <div class="legal-note-sm"><i class="fas fa-info-circle"></i> Esta identificación es exclusiva del Testamento de Activos Digitales y no depende de los datos del testamento general.</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="testador-digital-nombre" class="required">Nombre Completo</label>
+              <input type="text" id="testador-digital-nombre" placeholder="Nombres y apellidos" required />
+            </div>
+            <div class="form-group">
+              <label for="testador-digital-documento" class="required">Número de Documento</label>
+              <input type="text" id="testador-digital-documento" placeholder="Ej: 1.234.567.890" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="testador-digital-domicilio">Domicilio</label>
+            <input type="text" id="testador-digital-domicilio" placeholder="Ciudad / municipio de residencia" />
+          </div>
+          <button class="save" onclick="guardarTestadorDigital()"><i class="fas fa-save"></i> Guardar Identificación</button>
+          <div id="msg-exito-testador-digital" class="alert alert-success" style="margin-top:0.75rem;">
+            <i class="fas fa-check-circle"></i><div>Identificación guardada correctamente.</div>
+          </div>
+          <div id="msg-error-testador-digital" class="alert alert-error" style="margin-top:0.75rem;">
+            <i class="fas fa-exclamation-circle"></i><div>Ingrese nombre y documento del testador.</div>
+          </div>
+        </div>
+
+        <!-- Testigos (formalismo de validez, Art. 1068/1070 CC) -->
+        <div class="albacea-section">
+          <h4><i class="fas fa-user-friends"></i> Testigos</h4>
+          <div class="legal-note-sm"><i class="fas fa-info-circle"></i> Art. 1070 CC: El testamento abierto requiere mínimo 3 testigos hábiles o Notario + 3 testigos. Deben ser mayores de 18 años y no inhabilitados (Art. 1068 CC).</div>
+          <div id="testigos-digital-container">
+            <div class="testigo-row form-row">
+              <div class="form-group"><label>Testigo 1 — Nombre</label><input type="text" id="testigo1-digital-nombre" placeholder="Nombre completo" /></div>
+              <div class="form-group"><label>Testigo 1 — Documento</label><input type="text" id="testigo1-digital-documento" placeholder="Número de documento" /></div>
+            </div>
+            <div class="testigo-row form-row">
+              <div class="form-group"><label>Testigo 2 — Nombre</label><input type="text" id="testigo2-digital-nombre" placeholder="Nombre completo" /></div>
+              <div class="form-group"><label>Testigo 2 — Documento</label><input type="text" id="testigo2-digital-documento" placeholder="Número de documento" /></div>
+            </div>
+            <div class="testigo-row form-row">
+              <div class="form-group"><label>Testigo 3 — Nombre</label><input type="text" id="testigo3-digital-nombre" placeholder="Nombre completo" /></div>
+              <div class="form-group"><label>Testigo 3 — Documento</label><input type="text" id="testigo3-digital-documento" placeholder="Número de documento" /></div>
+            </div>
+          </div>
+          <button class="save" onclick="guardarTestigosDigital()"><i class="fas fa-save"></i> Guardar Testigos</button>
+          <div id="msg-exito-testigos-digital" class="alert alert-success" style="margin-top:0.75rem;">
+            <i class="fas fa-check-circle"></i><div>Testigos guardados correctamente.</div>
+          </div>
+        </div>
+
+        <!-- Vista previa del documento -->
+        <div class="will-preview will-preview-digital" id="vista-previa-testamento-digital">
+          <div class="will-header">
+            <span class="will-badge-digital"><i class="fas fa-laptop-code"></i> Documento independiente</span>
+            <h3>TESTAMENTO DE ACTIVOS DIGITALES</h3>
+            <p class="will-subtitle">Instrumento complementario para la disposición del patrimonio digital</p>
+          </div>
+
+          <div class="section digital-section">
+            <div class="section-title">I. IDENTIFICACIÓN DEL TESTADOR</div>
+            <p>Yo, <strong><span id="testador-digital-nombre-preview"></span></strong>, identificado(a) con <span id="testador-digital-documento-preview"></span>, domiciliado(a) en <span id="testador-digital-domicilio-preview"></span>, declaro hallarme en pleno uso de mis facultades mentales y que otorgo el presente Testamento de Activos Digitales de manera libre, voluntaria y espontánea.</p>
+          </div>
+
+          <div class="section digital-section">
+            <div class="section-title">II. REVOCACIÓN DE DISPOSICIONES DIGITALES ANTERIORES</div>
+            <p>Revoco y anulo expresamente cualquier disposición anterior relativa a mi patrimonio y huella digital, la cual queda sin ningún valor ni efecto.</p>
+          </div>
+
+          <div class="section digital-section">
+            <div class="section-title">III. CLÁUSULAS NOTARIALES INCORPORADAS</div>
+            <div id="clausulas-testamento-preview"></div>
+          </div>
+
+          <div class="section digital-section">
+            <div class="section-title">IV. ACTIVOS DIGITALES IDENTIFICADOS</div>
+            <div id="activos-digitales-testamento-preview"></div>
+          </div>
+
+          <div class="section digital-section will-firma">
+            <div class="section-title">V. CIERRE Y FIRMA</div>
+            <p>El presente instrumento fue leído en voz alta en presencia de los testigos aquí mencionados, quienes declararon no tener impedimento para serlo conforme al Art. 1068 del Código Civil Colombiano.</p>
+            <p><strong>Fecha de elaboración:</strong> <span id="fecha-testamento-digital"></span></p>
+            <p><strong>Lugar:</strong> <span id="lugar-testamento-digital"></span></p>
+            <div class="firma-grid" id="firma-grid-digital">
+              <div class="firma-box"><div class="firma-linea"></div><span>Firma del Testador</span><span id="firma-testador-digital-nombre"></span></div>
+              <div class="firma-box" id="firma-box-albacea-digital"><div class="firma-linea"></div><span>Firma Albacea Digital</span><span id="firma-albacea-digital-nombre"></span></div>
+              <div class="firma-box"><div class="firma-linea"></div><span>Firma Testigo 1</span><span id="firma-testigo1-digital"></span></div>
+              <div class="firma-box"><div class="firma-linea"></div><span>Firma Testigo 2</span><span id="firma-testigo2-digital"></span></div>
+              <div class="firma-box"><div class="firma-linea"></div><span>Firma Testigo 3</span><span id="firma-testigo3-digital"></span></div>
+              <div class="firma-box"><div class="firma-linea"></div><span>Firma Notario / Huella</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="acciones-testamento">
+          <button class="print-btn" onclick="imprimirTestamentoDigital()"><i class="fas fa-file-pdf"></i> Generar PDF</button>
+          <button class="btn-exportar" onclick="exportarTextoDigital()"><i class="fas fa-file-alt"></i> Exportar texto</button>
+          <button class="btn-refrescar" onclick="cargarVistaPreviaTestamentoDigital()"><i class="fas fa-sync-alt"></i> Actualizar vista</button>
+        </div>
+      </div>
+
+    </div><!-- /.pagina#digital -->
+
+    <!-- ========== PÁGINA: BENEFICIOS ========== -->
+    <div id="beneficios" class="pagina">
+      <h2><i class="fas fa-star"></i> Beneficios de Mi Testamento Virtual</h2>
+      <p class="beneficios-intro">Una herramienta gratuita, accesible y jurídicamente estructurada conforme al Código Civil Colombiano para que cualquier ciudadano pueda formalizar su voluntad sucesoral.</p>
+
+      <div class="beneficio-card">
+        <div class="beneficio-header">
+          <div class="beneficio-icon legal"><i class="fas fa-balance-scale"></i></div>
+          <div><h3>Perspectiva Legal</h3><span class="beneficio-tag legal">Marco Jurídico Colombiano</span></div>
+        </div>
+        <ul class="beneficio-lista">
+          <li><i class="fas fa-check-circle"></i><span>Cumple con los requisitos formales del <strong>testamento abierto</strong> (Art. 1064–1094 CC Colombiano).</span></li>
+          <li><i class="fas fa-check-circle"></i><span>Incorpora las <strong>asignaciones forzosas</strong> vigentes según Ley 1934 de 2018: mitad legitimaria, cuarto de mejoras y cuarto de libre disposición.</span></li>
+          <li><i class="fas fa-check-circle"></i><span>Incluye cláusulas esenciales: <strong>revocación de testamentos anteriores</strong>, declaración de capacidad mental, designación de albacea con facultades.</span></li>
+          <li><i class="fas fa-check-circle"></i><span>Genera documento con <strong>secciones numeradas y lenguaje jurídico formal</strong>, incluyendo espacios para firma de testigos y notario.</span></li>
+          <li><i class="fas fa-check-circle"></i><span>Facilita la <strong>protocolización ante notaría</strong>: el documento impreso puede ser presentado directamente al notario para su elevación a escritura pública.</span></li>
+        </ul>
+      </div>
+
+      <div class="beneficio-card">
+        <div class="beneficio-header">
+          <div class="beneficio-icon social"><i class="fas fa-globe-americas"></i></div>
+          <div><h3>Perspectiva Social</h3><span class="beneficio-tag social">Inclusión y Equidad</span></div>
+        </div>
+        <ul class="beneficio-lista">
+          <li><i class="fas fa-check-circle"></i><span><strong>Acceso gratuito y universal:</strong> elimina barreras económicas para formalizar la voluntad sucesoral.</span></li>
+          <li><i class="fas fa-check-circle"></i><span><strong>Inclusión digital:</strong> accesible desde celular, tablet o computador, sin instalaciones ni cuentas.</span></li>
+          <li><i class="fas fa-check-circle"></i><span><strong>Prevención de conflictos familiares:</strong> deja constancia clara y evita disputas sucesorias.</span></li>
+          <li><i class="fas fa-check-circle"></i><span><strong>Fomento de la cultura de previsión:</strong> promueve la responsabilidad patrimonial en vida.</span></li>
+        </ul>
+      </div>
+
+      <div class="beneficio-card">
+        <div class="beneficio-header">
+          <div class="beneficio-icon tech"><i class="fas fa-laptop-code"></i></div>
+          <div><h3>Perspectiva Tecnológica</h3><span class="beneficio-tag tech">Innovación y Seguridad</span></div>
+        </div>
+        <ul class="beneficio-lista">
+          <li><i class="fas fa-check-circle"></i><span><strong>100% local y privado:</strong> los datos se guardan solo en su dispositivo (localStorage), sin servidores externos.</span></li>
+          <li><i class="fas fa-check-circle"></i><span><strong>Validaciones inteligentes:</strong> verifica mayoría de edad, porcentajes de herencia, asignaciones forzosas y campos requeridos en tiempo real.</span></li>
+          <li><i class="fas fa-check-circle"></i><span><strong>Exportación múltiple:</strong> impresión directa y exportación como texto plano para posterior revisión legal.</span></li>
+          <li><i class="fas fa-check-circle"></i><span><strong>Arquitectura escalable:</strong> diseñada para integrar firma digital, autenticación biométrica y servicios notariales en línea.</span></li>
+        </ul>
+      </div>
+
+      <div class="marco-legal-card">
+        <h3><i class="fas fa-book"></i> Marco Normativo Aplicado</h3>
+        <div class="normas-grid">
+          <div class="norma-item"><strong>Art. 1055–1064 CC</strong><span>Definición y clases de testamentos</span></div>
+          <div class="norma-item"><strong>Art. 1061 CC</strong><span>Capacidad para testar (mayores de 18 años)</span></div>
+          <div class="norma-item"><strong>Art. 1068 CC</strong><span>Inhabilidades de testigos</span></div>
+          <div class="norma-item"><strong>Art. 1070 CC</strong><span>Testamento abierto ante notario y testigos</span></div>
+          <div class="norma-item"><strong>Art. 1226 CC</strong><span>Asignaciones forzosas</span></div>
+          <div class="norma-item"><strong>Ley 1934/2018</strong><span>Reforma al régimen de legítimas</span></div>
+          <div class="norma-item"><strong>Art. 1327 CC</strong><span>Designación de albacea</span></div>
+          <div class="norma-item"><strong>Art. 1040 CC</strong><span>Órdenes de sucesión intestada</span></div>
+        </div>
+      </div>
+
+      <div class="beneficios-cta">
+        <p>¿Listo para comenzar?</p>
+        <button class="save" onclick="mostrarPagina('cliente')"><i class="fas fa-user-edit"></i> Registrar mis datos</button>
+      </div>
+    </div>
+
+  </div><!-- /.container -->
+
+  <footer>
+    <div class="footer-content">
+      <div>© 2024 <strong>Mi Testamento Virtual</strong> · Colombia</div>
+      <div>Herramienta de orientación jurídica · No reemplaza asesoría legal profesional</div>
+      <div>Basado en el Código Civil Colombiano y Ley 1934 de 2018</div>
+    </div>
+  </footer>
+
+  <script>
+/* =============================================
+   MI TESTAMENTO VIRTUAL — app.js
+   Flujo guiado con compuertas por nivel
+   ============================================= */
+
+// ============================================================
+// ORDEN DE PASOS Y ESTADO GLOBAL
+// ============================================================
+var PASOS = ['inicio', 'cliente', 'bienes', 'beneficiario', 'testamento'];
+var currentTab = 'datos-personales';
+var pestanas = ['datos-personales', 'datos-contacto', 'datos-familiares'];
+var pendingModalCallback = null;
+
+// ============================================================
+// INICIALIZACIÓN
+// ============================================================
+document.addEventListener('DOMContentLoaded', function () {
+  actualizarNavLocks();
+  actualizarStepperGlobal();
+  mostrarPagina('inicio');
+  // Calcular edad al cambiar fecha
+  var fechaInput = document.getElementById('fecha-nacimiento');
+  if (fechaInput) fechaInput.addEventListener('change', calcularEdad);
+});
+
+// ============================================================
+// HELPERS — qué pasos están completados
+// ============================================================
+function pasoCompletado(paso) {
+  switch (paso) {
+    case 'inicio':    return true;
+    case 'cliente':   return !!localStorage.getItem('clienteTestamento');
+    case 'bienes':    return (JSON.parse(localStorage.getItem('bienesTestamento')) || []).length > 0;
+    case 'beneficiario': return (JSON.parse(localStorage.getItem('beneficiariosTestamento')) || []).length > 0;
+    case 'testamento': return !!localStorage.getItem('albaceaTestamento');
+    default: return false;
+  }
+}
+
+function pasoAnteriorCompletado(paso) {
+  var idx = PASOS.indexOf(paso);
+  if (idx <= 1) return true; // inicio y cliente siempre accesibles
+  return pasoCompletado(PASOS[idx - 1]);
+}
+
+// ============================================================
+// NAV — bloquear / desbloquear botones
+// ============================================================
+function actualizarNavLocks() {
+  document.querySelectorAll('nav button[data-pagina]').forEach(function (btn) {
+    var destino = btn.getAttribute('data-pagina');
+    if (destino === 'inicio' || destino === 'beneficios' || destino === 'digital') {
+      btn.classList.remove('nav-locked');
+      return;
+    }
+    if (pasoAnteriorCompletado(destino)) {
+      btn.classList.remove('nav-locked');
+    } else {
+      btn.classList.add('nav-locked');
+    }
+  });
+}
+
+// ============================================================
+// STEPPER GLOBAL (indicador en header)
+// ============================================================
+function actualizarStepperGlobal() {
+  var mapa = { cliente: 'check-cliente', bienes: 'check-bienes', beneficiario: 'check-beneficiarios', testamento: 'check-albacea', digital: 'check-digital' };
+  Object.keys(mapa).forEach(function (paso) {
+    var el = document.getElementById(mapa[paso]);
+    if (!el) return;
+    var completado = paso === 'digital'
+      ? !!localStorage.getItem('albaceaDigitalTestamento')
+      : pasoCompletado(paso);
+    if (completado) {
+      el.classList.add('done');
+      el.querySelector('i').className = 'fas fa-check-circle';
+    } else {
+      el.classList.remove('done');
+      el.querySelector('i').className = 'fas fa-circle';
+    }
+  });
+}
+
+// ============================================================
+// NAVEGACIÓN DE PÁGINAS
+// ============================================================
+// Resalta el botón de nav principal correspondiente a la página activa.
+// Las 4 páginas del flujo clásico (cliente/bienes/beneficiario/testamento)
+// comparten un único botón de nav: "Testamento Clásico" (data-pagina="cliente").
+function resaltarNavPrincipal(paginaId) {
+  var CLASICO = ['cliente', 'bienes', 'beneficiario', 'testamento'];
+  var destinoResaltado = CLASICO.indexOf(paginaId) !== -1 ? 'cliente' : paginaId;
+  document.querySelectorAll('nav button').forEach(function (btn) {
+    btn.classList.remove('nav-active');
+    if (btn.getAttribute('data-pagina') === destinoResaltado) btn.classList.add('nav-active');
+  });
+}
+
+function mostrarPagina(paginaId) {
+  // Compuerta: si el paso anterior no está completo, bloquear
+  if (paginaId !== 'inicio' && paginaId !== 'beneficios' && paginaId !== 'digital') {
+    if (!pasoAnteriorCompletado(paginaId)) {
+      var idx = PASOS.indexOf(paginaId);
+      var pasoRequerido = PASOS[idx - 1];
+      var nombres = { cliente: 'Testador', bienes: 'Bienes', beneficiario: 'Beneficiarios', testamento: 'Testamento' };
+      mostrarBloqueada(paginaId, nombres[pasoRequerido] || pasoRequerido, pasoRequerido);
+      return;
+    }
+  }
+
+  document.querySelectorAll('.pagina').forEach(function (p) { p.classList.remove('active'); });
+  var target = document.getElementById(paginaId);
+  if (target) target.classList.add('active');
+
+  resaltarNavPrincipal(paginaId);
+
+  document.querySelectorAll('.alert').forEach(function (a) { a.style.display = 'none'; });
+
+  // Acciones por página
+  if (paginaId === 'cliente')     { resetTabs(); }
+  if (paginaId === 'bienes')      { cargarBienes(); }
+  if (paginaId === 'beneficiario') { cargarBeneficiarios(); actualizarBadgePorcentaje(); }
+  if (paginaId === 'testamento')  { cargarVistaPreviaTestamento(); }
+
+  actualizarNavLocks();
+  actualizarStepperGlobal();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Muestra un banner de sección bloqueada dentro del contenedor
+function mostrarBloqueada(paginaId, nombrePasoRequerido, idPasoRequerido) {
+  document.querySelectorAll('.pagina').forEach(function (p) { p.classList.remove('active'); });
+  var target = document.getElementById(paginaId);
+  if (!target) return;
+
+  // Guardar contenido real y mostrar pantalla bloqueada
+  var bloqueada = document.createElement('div');
+  bloqueada.className = 'seccion-bloqueada pagina active';
+  bloqueada.id = 'bloqueada-temp';
+  bloqueada.innerHTML =
+    '<div class="bloqueada-icono"><i class="fas fa-lock"></i></div>' +
+    '<h3>Sección bloqueada</h3>' +
+    '<p>Debes completar primero el paso <strong>' + nombrePasoRequerido + '</strong> para acceder a esta sección.</p>' +
+    '<button class="btn-ir-paso" onclick="irAPaso(\'' + idPasoRequerido + '\')">' +
+    '<i class="fas fa-arrow-right"></i> Ir a ' + nombrePasoRequerido + '</button>';
+
+  // Remover posible bloqueada anterior
+  var anterior = document.getElementById('bloqueada-temp');
+  if (anterior) anterior.remove();
+
+  target.parentNode.insertBefore(bloqueada, target);
+  bloqueada.classList.add('active');
+
+  resaltarNavPrincipal(paginaId);
+}
+
+function irAPaso(pasoId) {
+  var anterior = document.getElementById('bloqueada-temp');
+  if (anterior) anterior.remove();
+  mostrarPagina(pasoId);
+}
+
+// ============================================================
+// PANTALLA DE TRANSICIÓN (celebración al completar un paso)
+// ============================================================
+function mostrarTransicion(config) {
+  // config: { titulo, subtitulo, icono, claseIcono, resumen:[], siguientePaso, idPasoActual }
+  var paginaActual = document.getElementById(config.idPasoActual);
+  if (!paginaActual) { mostrarPagina(config.siguientePaso); return; }
+
+  // Construir resumen
+  var resumenHtml = '';
+  if (config.resumen && config.resumen.length) {
+    resumenHtml = '<div class="transicion-resumen"><h4>Resumen guardado</h4>';
+    config.resumen.forEach(function (item) {
+      resumenHtml += '<div class="resumen-item"><i class="fas fa-check-circle"></i><span>' + escapeHtml(item) + '</span></div>';
+    });
+    resumenHtml += '</div>';
+  }
+
+  var div = document.createElement('div');
+  div.className = 'pantalla-transicion activa';
+  div.id = 'transicion-' + config.idPasoActual;
+  div.innerHTML =
+    '<div class="transicion-icono ' + (config.claseIcono || 'exito') + '"><i class="fas ' + (config.icono || 'fa-check') + '"></i></div>' +
+    '<div class="transicion-titulo">' + config.titulo + '</div>' +
+    '<div class="transicion-subtitulo">' + config.subtitulo + '</div>' +
+    resumenHtml +
+    '<div class="transicion-acciones">' +
+    '<button class="btn-continuar" onclick="continuarDesdTransicion(\'' + config.siguientePaso + '\', \'' + config.idPasoActual + '\')">' +
+    '<i class="fas fa-arrow-right"></i> Continuar al siguiente paso' +
+    '</button>' +
+    '<button class="btn-editar-paso" onclick="editarPaso(\'' + config.idPasoActual + '\')">' +
+    '<i class="fas fa-pencil-alt"></i> Revisar / Editar' +
+    '</button>' +
+    '</div>';
+
+  // Ocultar contenido del paso y mostrar transición
+  paginaActual.style.display = 'none';
+  paginaActual.parentNode.insertBefore(div, paginaActual.nextSibling);
+  div.style.display = 'flex';
+
+  actualizarNavLocks();
+  actualizarStepperGlobal();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function continuarDesdTransicion(siguientePaso, pasoActualId) {
+  var trans = document.getElementById('transicion-' + pasoActualId);
+  if (trans) trans.remove();
+  var paginaActual = document.getElementById(pasoActualId);
+  if (paginaActual) paginaActual.style.display = '';
+  mostrarPagina(siguientePaso);
+}
+
+function editarPaso(pasoId) {
+  var trans = document.getElementById('transicion-' + pasoId);
+  if (trans) trans.remove();
+  var pagina = document.getElementById(pasoId);
+  if (pagina) { pagina.style.display = ''; pagina.classList.add('active'); }
+  resaltarNavPrincipal(pasoId);
+}
+
+// ============================================================
+// TABS + PROGRESS BAR (dentro de página Cliente)
+// ============================================================
+function resetTabs() {
+  currentTab = 'datos-personales';
+  updateTabNavigation();
+}
+
+function updateTabNavigation() {
+  document.querySelectorAll('.tab-content').forEach(function (t) { t.classList.add('hidden'); });
+  var activa = document.getElementById(currentTab);
+  if (activa) activa.classList.remove('hidden');
+
+  var tabIndex = pestanas.indexOf(currentTab);
+  document.querySelectorAll('.tab-btn').forEach(function (btn, i) {
+    btn.classList.remove('active', 'disabled');
+    if (i === tabIndex)  btn.classList.add('active');
+    else if (i > tabIndex) btn.classList.add('disabled');
+  });
+
+  updateProgressBar(tabIndex + 1);
+  var err = document.getElementById('mensaje-error-cliente');
+  if (err) err.style.display = 'none';
+}
+
+function updateProgressBar(step) {
+  var progress = ((step - 1) / 2) * 100;
+  var bar = document.getElementById('progress-bar');
+  if (bar) bar.style.width = progress + '%';
+  for (var i = 1; i <= 3; i++) {
+    var el = document.getElementById('step' + i);
+    if (!el) continue;
+    el.classList.remove('active', 'completed');
+    if (i < step) el.classList.add('completed');
+    else if (i === step) el.classList.add('active');
+  }
+}
+
+function mostrarTab(tabId) {
+  var ci = pestanas.indexOf(currentTab);
+  var ti = pestanas.indexOf(tabId);
+  if (ti <= ci) { currentTab = tabId; updateTabNavigation(); }
+}
+
+function avanzarPestana() {
+  var ci = pestanas.indexOf(currentTab);
+  if (ci < pestanas.length - 1 && validarCamposPestana(currentTab)) {
+    currentTab = pestanas[ci + 1];
+    updateTabNavigation();
+  }
+}
+
+function retrocederPestana() {
+  var ci = pestanas.indexOf(currentTab);
+  if (ci > 0) { currentTab = pestanas[ci - 1]; updateTabNavigation(); }
+}
+
+// ============================================================
+// MENSAJES
+// ============================================================
+function mostrarExito(elementId, mensaje) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  var div = el.querySelector('div');
+  if (div) div.textContent = mensaje;
+  el.style.display = 'flex';
+  el.style.alignItems = 'center';
+  el.style.gap = '0.5rem';
+  setTimeout(function () { el.style.display = 'none'; }, 5000);
+}
+
+function mostrarError(elementId, mensaje) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  if (elementId === 'mensaje-error-cliente') {
+    var t = document.getElementById('mensaje-error-texto');
+    if (t) t.textContent = mensaje;
+  } else {
+    var div = el.querySelector('div');
+    if (div) div.textContent = mensaje;
+  }
+  el.style.display = 'flex';
+  el.style.alignItems = 'center';
+  el.style.gap = '0.5rem';
+}
+
+// ============================================================
+// MODAL DE CONFIRMACIÓN
+// ============================================================
+function abrirModal(titulo, mensaje, callback) {
+  document.getElementById('modal-titulo').textContent = titulo;
+  document.getElementById('modal-mensaje').textContent = mensaje;
+  pendingModalCallback = callback;
+  document.getElementById('btn-modal-ok').onclick = function () {
+    cerrarModal();
+    if (pendingModalCallback) pendingModalCallback();
+  };
+  document.getElementById('modal-confirmar').classList.remove('hidden');
+}
+
+function cerrarModal() {
+  document.getElementById('modal-confirmar').classList.add('hidden');
+  pendingModalCallback = null;
+}
+
+// ============================================================
+// UTILIDADES
+// ============================================================
+function setSpan(id, texto) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = texto;
+}
+
+function formatearFecha(iso) {
+  if (!iso) return '—';
+  var p = iso.split('-');
+  return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : iso;
+}
+
+function formatearFechaActual() {
+  return new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function formatearMoneda(valor) {
+  if (!valor) return '—';
+  return '$ ' + parseInt(valor).toLocaleString('es-CO');
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function togglePassword(id, btn) {
+  var input = document.getElementById(id);
+  if (!input) return;
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.querySelector('i').className = 'fas fa-eye-slash';
+  } else {
+    input.type = 'password';
+    btn.querySelector('i').className = 'fas fa-eye';
+  }
+}
+
+function calcularEdad() {
+  var fechaVal = document.getElementById('fecha-nacimiento').value;
+  var display   = document.getElementById('edad-display');
+  if (!fechaVal || !display) return;
+  var hoy  = new Date();
+  var nac  = new Date(fechaVal);
+  var edad = hoy.getFullYear() - nac.getFullYear();
+  var m    = hoy.getMonth() - nac.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
+  if (edad < 18) {
+    display.textContent = edad + ' años — No cumple la edad mínima (Art. 1061 CC)';
+    display.className = 'edad-display edad-error';
+  } else {
+    display.textContent = edad + ' años — Cumple el requisito legal';
+    display.className = 'edad-display edad-ok';
+  }
+}
+
+// ============================================================
+// VALIDACIONES
+// ============================================================
+function validarCorreos() {
+  var c1 = document.getElementById('correo').value;
+  var c2 = document.getElementById('confirmar-correo').value;
+  if (c1 && c2 && c1 !== c2) {
+    document.getElementById('correo').classList.add('invalid');
+    document.getElementById('confirmar-correo').classList.add('invalid');
+    mostrarError('mensaje-error-cliente', 'Los correos electrónicos no coinciden');
+    return false;
+  }
+  document.getElementById('correo').classList.remove('invalid');
+  document.getElementById('confirmar-correo').classList.remove('invalid');
+  return true;
+}
+
+function validarCamposPestana(pestana) {
+  var requeridos = {
+    'datos-personales': ['tipo-documento','numero-documento','password','nombre','apellido','sexo','fecha-nacimiento','pais-nacimiento','nivel-estudio'],
+    'datos-contacto':   ['pais-residencia','departamento-residencia','municipio-residencia','celular','correo','confirmar-correo']
+  };
+  var campos = requeridos[pestana];
+  if (!campos) return true;
+  var ok = true;
+
+  // Validar mayoría de edad
+  if (pestana === 'datos-personales') {
+    var fechaVal = document.getElementById('fecha-nacimiento') ? document.getElementById('fecha-nacimiento').value : '';
+    if (fechaVal) {
+      var nac = new Date(fechaVal);
+      var hoy = new Date();
+      var edad = hoy.getFullYear() - nac.getFullYear();
+      var m = hoy.getMonth() - nac.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
+      if (edad < 18) {
+        document.getElementById('fecha-nacimiento').classList.add('invalid');
+        mostrarError('mensaje-error-cliente', 'Debe ser mayor de 18 años para otorgar testamento (Art. 1061 CC)');
+        return false;
+      }
+    }
+  }
+
+  campos.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (!el.value.trim()) {
+      el.classList.add('invalid');
+      if (ok) {
+        var lbl = el.previousElementSibling;
+        var txt = lbl ? lbl.textContent.replace(' *','').trim() : id;
+        mostrarError('mensaje-error-cliente', 'Por favor complete: ' + txt);
+        el.focus();
+        ok = false;
+      }
+    } else {
+      el.classList.remove('invalid');
+    }
+  });
+
+  if (!ok) return false;
+  if (pestana === 'datos-contacto') return validarCorreos();
+  return true;
+}
+
+// ============================================================
+// CLIENTE — guardar y mostrar transición
+// ============================================================
+function guardarCliente() {
+  if (!validarCamposPestana('datos-personales') || !validarCamposPestana('datos-contacto')) return;
+
+  var dp = document.getElementById;
+  var clienteData = {
+    datosPersonales: {
+      tipoDocumento:         document.getElementById('tipo-documento').value,
+      numeroDocumento:       document.getElementById('numero-documento').value.trim(),
+      nombre:                document.getElementById('nombre').value.trim(),
+      apellido:              document.getElementById('apellido').value.trim(),
+      sexo:                  document.getElementById('sexo').value,
+      fechaNacimiento:       document.getElementById('fecha-nacimiento').value,
+      paisNacimiento:        document.getElementById('pais-nacimiento').value,
+      departamentoNacimiento:document.getElementById('departamento-nacimiento').value,
+      municipioNacimiento:   document.getElementById('municipio-nacimiento').value.trim(),
+      nivelEstudio:          document.getElementById('nivel-estudio').value
+    },
+    datosContacto: {
+      paisResidencia:         document.getElementById('pais-residencia').value,
+      departamentoResidencia: document.getElementById('departamento-residencia').value,
+      municipioResidencia:    document.getElementById('municipio-residencia').value.trim(),
+      celular:                document.getElementById('celular').value.trim(),
+      correo:                 document.getElementById('correo').value.trim(),
+      direccion:              document.getElementById('direccion').value.trim()
+    },
+    datosFamiliares: {
+      estadoCivil:        document.getElementById('estado-civil').value,
+      nombreConyuge:      document.getElementById('nombre-conyuge').value.trim(),
+      hijos:              document.getElementById('hijos').value,
+      profesion:          document.getElementById('profesion') ? document.getElementById('profesion').value.trim() : '',
+      contactoEmergencia: document.getElementById('contacto-emergencia').value.trim(),
+      telefonoEmergencia: document.getElementById('telefono-emergencia').value.trim()
+    },
+    fechaRegistro: new Date().toISOString()
+  };
+
+  try {
+    localStorage.setItem('clienteTestamento', JSON.stringify(clienteData));
+    var nombre = clienteData.datosPersonales.nombre + ' ' + clienteData.datosPersonales.apellido;
+    mostrarTransicion({
+      idPasoActual: 'cliente',
+      siguientePaso: 'bienes',
+      icono: 'fa-user-check',
+      claseIcono: 'exito',
+      titulo: '¡Testador registrado!',
+      subtitulo: 'Tus datos personales han sido guardados correctamente. Ahora declara los bienes que conforman tu patrimonio.',
+      resumen: [
+        'Nombre: ' + nombre,
+        'Documento: ' + clienteData.datosPersonales.tipoDocumento + ' ' + clienteData.datosPersonales.numeroDocumento,
+        'Residencia: ' + clienteData.datosContacto.municipioResidencia + ', ' + clienteData.datosContacto.paisResidencia,
+        'Estado civil: ' + (clienteData.datosFamiliares.estadoCivil || 'No indicado')
+      ]
+    });
+  } catch (e) {
+    mostrarError('mensaje-error-cliente', 'Error al guardar: ' + e.message);
+  }
+}
+
+// ============================================================
+// BIENES — guardar, cargar, eliminar, transición
+// ============================================================
+function guardarBien() {
+  var tipo = document.getElementById('bien-tipo');
+  var desc = document.getElementById('bien-descripcion');
+  if (!tipo.value) { tipo.classList.add('invalid'); mostrarError('mensaje-error-bien', 'Seleccione el tipo de bien'); return; }
+  tipo.classList.remove('invalid');
+  if (!desc.value.trim()) { desc.classList.add('invalid'); mostrarError('mensaje-error-bien', 'Ingrese la descripción del bien'); return; }
+  desc.classList.remove('invalid');
+
+  var bien = {
+    tipo:        tipo.value,
+    descripcion: desc.value.trim(),
+    matricula:   document.getElementById('bien-matricula').value.trim(),
+    valor:       document.getElementById('bien-valor').value,
+    notas:       document.getElementById('bien-notas').value.trim(),
+    fecha:       new Date().toISOString()
+  };
+
+  try {
+    var bienes = JSON.parse(localStorage.getItem('bienesTestamento')) || [];
+    bienes.push(bien);
+    localStorage.setItem('bienesTestamento', JSON.stringify(bienes));
+    mostrarExito('mensaje-exito-bien', 'Bien registrado. Puede agregar más bienes.');
+    ['bien-tipo','bien-descripcion','bien-matricula','bien-valor','bien-notas'].forEach(function(id) {
+      var el = document.getElementById(id); if (el) { el.value = ''; el.classList.remove('invalid'); }
+    });
+    cargarBienes();
+  } catch (e) {
+    mostrarError('mensaje-error-bien', 'Error: ' + e.message);
+  }
+}
+
+function cargarBienes() {
+  var container = document.getElementById('bienes-container');
+  var countEl   = document.getElementById('bienes-count');
+  if (!container) return;
+  var bienes = JSON.parse(localStorage.getItem('bienesTestamento')) || [];
+  if (countEl) countEl.textContent = bienes.length + (bienes.length === 1 ? ' bien' : ' bienes');
+  if (bienes.length === 0) {
+    container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;">No hay bienes registrados aún.</p>';
+    return;
+  }
+  var html = '';
+  bienes.forEach(function (b, i) {
+    html += '<div class="bien-item">' +
+      '<div class="bien-info">' +
+      '<h4>' + escapeHtml(b.tipo) + '</h4>' +
+      '<p>' + escapeHtml(b.descripcion) + '</p>' +
+      (b.valor ? '<p><strong>Valor estimado:</strong> ' + formatearMoneda(b.valor) + '</p>' : '') +
+      '</div>' +
+      '<div class="bien-actions"><button onclick="confirmarEliminarBien(' + i + ')"><i class="fas fa-trash"></i> Eliminar</button></div>' +
+      '</div>';
+  });
+  container.innerHTML = html;
+
+  // Mostrar botón de continuar si hay bienes
+  mostrarBotonContinuarBienes(bienes.length);
+}
+
+function mostrarBotonContinuarBienes(cantidad) {
+  var existente = document.getElementById('btn-continuar-bienes');
+  if (cantidad > 0 && !existente) {
+    var btn = document.createElement('button');
+    btn.id = 'btn-continuar-bienes';
+    btn.className = 'btn-continuar';
+    btn.style.marginTop = '1.5rem';
+    btn.style.width = '100%';
+    btn.style.justifyContent = 'center';
+    btn.innerHTML = '<i class="fas fa-arrow-right"></i> Continuar con Beneficiarios';
+    btn.onclick = function () { terminarBienes(); };
+    var lista = document.querySelector('#bienes .beneficiarios-list');
+    if (lista) lista.appendChild(btn);
+  }
+}
+
+function terminarBienes() {
+  var bienes = JSON.parse(localStorage.getItem('bienesTestamento')) || [];
+  if (bienes.length === 0) { mostrarError('mensaje-error-bien', 'Registre al menos un bien para continuar'); return; }
+  var resumen = bienes.slice(0,4).map(function(b) { return b.tipo + ': ' + b.descripcion.substring(0,50); });
+  if (bienes.length > 4) resumen.push('... y ' + (bienes.length - 4) + ' bien(es) más');
+  mostrarTransicion({
+    idPasoActual: 'bienes',
+    siguientePaso: 'beneficiario',
+    icono: 'fa-building',
+    claseIcono: 'exito',
+    titulo: '¡Patrimonio declarado!',
+    subtitulo: 'Has registrado ' + bienes.length + ' bien(es). Ahora designa a los beneficiarios de tu herencia.',
+    resumen: resumen
+  });
+}
+
+function confirmarEliminarBien(index) {
+  abrirModal('Eliminar bien', '¿Está seguro de eliminar este bien? Esta acción no se puede deshacer.', function () {
+    var bienes = JSON.parse(localStorage.getItem('bienesTestamento')) || [];
+    bienes.splice(index, 1);
+    localStorage.setItem('bienesTestamento', JSON.stringify(bienes));
+    cargarBienes();
+  });
+}
+
+// ============================================================
+// BENEFICIARIOS — guardar, cargar, eliminar, transición
+// ============================================================
+function guardarBeneficiario() {
+  var campos = ['beneficiario-nombre','beneficiario-parentesco','beneficiario-porcentaje'];
+  var ok = true;
+  campos.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el || !el.value.trim()) {
+      if (el) el.classList.add('invalid');
+      if (ok) {
+        var lbl = el ? el.previousElementSibling : null;
+        mostrarError('mensaje-error-beneficiario', 'Complete: ' + (lbl ? lbl.textContent.replace(' *','').trim() : id));
+        if (el) el.focus();
+        ok = false;
+      }
+    } else {
+      if (el) el.classList.remove('invalid');
+    }
+  });
+  if (!ok) return;
+
+  var pct = parseInt(document.getElementById('beneficiario-porcentaje').value, 10);
+  if (isNaN(pct) || pct < 1 || pct > 100) {
+    document.getElementById('beneficiario-porcentaje').classList.add('invalid');
+    mostrarError('mensaje-error-beneficiario', 'El porcentaje debe estar entre 1 y 100');
+    return;
+  }
+  var total = calcularPorcentajeTotal();
+  if (total + pct > 100) {
+    document.getElementById('beneficiario-porcentaje').classList.add('invalid');
+    mostrarError('mensaje-error-beneficiario', 'Supera el 100%. Disponible: ' + (100 - total) + '%');
+    return;
+  }
+
+  var b = {
+    nombre:          document.getElementById('beneficiario-nombre').value.trim(),
+    parentesco:      document.getElementById('beneficiario-parentesco').value,
+    tipoAsignacion:  document.getElementById('beneficiario-tipo-asignacion') ? document.getElementById('beneficiario-tipo-asignacion').value : 'Cuota herencial',
+    porcentaje:      pct,
+    documento:       document.getElementById('beneficiario-documento').value.trim(),
+    bienLegado:      document.getElementById('beneficiario-bien-legado') ? document.getElementById('beneficiario-bien-legado').value.trim() : '',
+    contacto:        document.getElementById('beneficiario-contacto').value.trim(),
+    notas:           document.getElementById('beneficiario-notas').value.trim(),
+    fecha:           new Date().toISOString()
+  };
+
+  try {
+    var lista = JSON.parse(localStorage.getItem('beneficiariosTestamento')) || [];
+    lista.push(b);
+    localStorage.setItem('beneficiariosTestamento', JSON.stringify(lista));
+    mostrarExito('mensaje-exito-beneficiario', 'Beneficiario registrado. Puede agregar más.');
+    ['beneficiario-nombre','beneficiario-parentesco','beneficiario-porcentaje',
+     'beneficiario-documento','beneficiario-bien-legado','beneficiario-contacto','beneficiario-notas'].forEach(function(id){
+      var el = document.getElementById(id); if(el){el.value='';el.classList.remove('invalid');}
+    });
+    cargarBeneficiarios();
+    actualizarBadgePorcentaje();
+  } catch (e) { mostrarError('mensaje-error-beneficiario', 'Error: ' + e.message); }
+}
+
+function cargarBeneficiarios() {
+  var container = document.getElementById('beneficiarios-container');
+  var countEl   = document.getElementById('beneficiarios-count');
+  if (!container) return;
+  var lista = JSON.parse(localStorage.getItem('beneficiariosTestamento')) || [];
+  if (countEl) countEl.textContent = lista.length;
+  if (lista.length === 0) {
+    container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;">No hay beneficiarios registrados aún.</p>';
+    return;
+  }
+  var html = '';
+  lista.forEach(function (b, i) {
+    html += '<div class="beneficiario-item">' +
+      '<div class="beneficiario-info">' +
+      '<h4>' + escapeHtml(b.nombre) + '</h4>' +
+      '<p><strong>Parentesco:</strong> ' + escapeHtml(b.parentesco) + '</p>' +
+      '<p><strong>' + escapeHtml(b.tipoAsignacion) + ':</strong> ' + b.porcentaje + '%' +
+      (b.bienLegado ? ' — ' + escapeHtml(b.bienLegado) : '') + '</p>' +
+      '</div>' +
+      '<div class="beneficiario-actions">' +
+      '<button onclick="confirmarEliminarBeneficiario(' + i + ')"><i class="fas fa-trash"></i> Eliminar</button>' +
+      '</div></div>';
+  });
+  container.innerHTML = html;
+  mostrarBotonContinuarBeneficiarios(lista.length, calcularPorcentajeTotal());
+}
+
+function mostrarBotonContinuarBeneficiarios(cantidad, total) {
+  var existente = document.getElementById('btn-continuar-benef');
+  if (existente) existente.remove();
+  if (cantidad > 0) {
+    var div = document.createElement('div');
+    div.style.marginTop = '1.5rem';
+    var advertencia = total < 100
+      ? '<p style="color:var(--warning);font-size:0.85rem;margin-bottom:0.75rem;"><i class="fas fa-exclamation-triangle"></i> Has asignado ' + total + '%. El ' + (100-total) + '% restante quedará sin asignar.</p>'
+      : '';
+    div.innerHTML = advertencia +
+      '<button id="btn-continuar-benef" class="btn-continuar" style="width:100%;justify-content:center;" onclick="terminarBeneficiarios()">' +
+      '<i class="fas fa-arrow-right"></i> Continuar con el Testamento</button>';
+    var lista = document.querySelector('#beneficiario .beneficiarios-list');
+    if (lista) lista.appendChild(div);
+  }
+}
+
+function terminarBeneficiarios() {
+  var lista = JSON.parse(localStorage.getItem('beneficiariosTestamento')) || [];
+  if (lista.length === 0) { mostrarError('mensaje-error-beneficiario', 'Registre al menos un beneficiario'); return; }
+  var total = calcularPorcentajeTotal();
+  var resumen = lista.map(function(b){ return b.nombre + ' (' + b.parentesco + ') — ' + b.porcentaje + '%'; });
+  resumen.push('Total asignado: ' + total + '%');
+  mostrarTransicion({
+    idPasoActual: 'beneficiario',
+    siguientePaso: 'testamento',
+    icono: 'fa-users',
+    claseIcono: 'exito',
+    titulo: '¡Beneficiarios registrados!',
+    subtitulo: 'Has designado ' + lista.length + ' beneficiario(s) con un total del ' + total + '% de la herencia. Ahora designa el albacea y genera tu testamento.',
+    resumen: resumen
+  });
+}
+
+function confirmarEliminarBeneficiario(index) {
+  abrirModal('Eliminar beneficiario', '¿Está seguro de eliminar este beneficiario?', function () {
+    var lista = JSON.parse(localStorage.getItem('beneficiariosTestamento')) || [];
+    lista.splice(index, 1);
+    localStorage.setItem('beneficiariosTestamento', JSON.stringify(lista));
+    cargarBeneficiarios();
+    actualizarBadgePorcentaje();
+  });
+}
+
+function calcularPorcentajeTotal() {
+  var lista = JSON.parse(localStorage.getItem('beneficiariosTestamento')) || [];
+  return lista.reduce(function (s, b) { return s + (parseInt(b.porcentaje, 10) || 0); }, 0);
+}
+
+function actualizarBadgePorcentaje() {
+  var badge = document.getElementById('badge-porcentaje');
+  if (!badge) return;
+  var total = calcularPorcentajeTotal();
+  badge.className = 'porcentaje-total';
+  if (total === 100) {
+    badge.classList.add('ok');
+    badge.innerHTML = '<i class="fas fa-check-circle"></i> Total asignado: ' + total + '% — Completo';
+  } else if (total > 100) {
+    badge.classList.add('over');
+    badge.innerHTML = '<i class="fas fa-exclamation-circle"></i> Total: ' + total + '% — Excede el 100%';
+  } else {
+    badge.classList.add('warn');
+    badge.innerHTML = '<i class="fas fa-info-circle"></i> Total: ' + total + '% — Faltan ' + (100 - total) + '%';
+  }
+}
+
+// ============================================================
+// ALBACEA y TESTIGOS
+// ============================================================
+function guardarAlbacea() {
+  var nombre    = document.getElementById('albacea-nombre')    ? document.getElementById('albacea-nombre').value.trim()    : '';
+  var documento = document.getElementById('albacea-documento') ? document.getElementById('albacea-documento').value.trim() : '';
+  var sustituto = document.getElementById('sustituto-nombre')  ? document.getElementById('sustituto-nombre').value.trim()  : '';
+  var facultades= document.getElementById('albacea-facultades')? document.getElementById('albacea-facultades').value : 'generales';
+
+  if (!nombre) { mostrarError('mensaje-error-albacea', 'Ingrese el nombre del albacea'); return; }
+  var data = { nombre, documento, sustituto, facultades };
+  localStorage.setItem('albaceaTestamento', JSON.stringify(data));
+  mostrarExito('mensaje-exito-albacea', 'Albacea guardado.');
+  actualizarNavLocks(); actualizarStepperGlobal();
+  cargarVistaPreviaTestamento();
+}
+
+function guardarTestigos() {
+  var testigos = [];
+  for (var i = 1; i <= 3; i++) {
+    var n = document.getElementById('testigo'+i+'-nombre')    ? document.getElementById('testigo'+i+'-nombre').value.trim()    : '';
+    var d = document.getElementById('testigo'+i+'-documento') ? document.getElementById('testigo'+i+'-documento').value.trim() : '';
+    testigos.push({ nombre: n, documento: d });
+  }
+  localStorage.setItem('testigosTestamento', JSON.stringify(testigos));
+  mostrarExito('mensaje-exito-testigos', 'Testigos guardados.');
+  cargarVistaPreviaTestamento();
+}
+
+// ============================================================
+// TESTAMENTO — vista previa
+// ============================================================
+function cargarVistaPreviaTestamento() {
+  var cliente     = JSON.parse(localStorage.getItem('clienteTestamento'));
+  var beneficiarios = JSON.parse(localStorage.getItem('beneficiariosTestamento')) || [];
+  var bienes      = JSON.parse(localStorage.getItem('bienesTestamento')) || [];
+  var albacea     = JSON.parse(localStorage.getItem('albaceaTestamento')) || {};
+  var testigos    = JSON.parse(localStorage.getItem('testigosTestamento')) || [];
+
+  // Pre-rellenar campos de albacea
+  if (albacea.nombre)    { var n = document.getElementById('albacea-nombre');    if(n) n.value = albacea.nombre; }
+  if (albacea.documento) { var d = document.getElementById('albacea-documento'); if(d) d.value = albacea.documento; }
+  if (albacea.sustituto) { var s = document.getElementById('sustituto-nombre');  if(s) s.value = albacea.sustituto; }
+  if (albacea.facultades){ var f = document.getElementById('albacea-facultades');if(f) f.value = albacea.facultades; }
+
+  // Pre-rellenar testigos
+  for (var i = 1; i <= 3; i++) {
+    if (testigos[i-1]) {
+      var tn = document.getElementById('testigo'+i+'-nombre');
+      var td = document.getElementById('testigo'+i+'-documento');
+      if (tn && testigos[i-1].nombre)    tn.value = testigos[i-1].nombre;
+      if (td && testigos[i-1].documento) td.value = testigos[i-1].documento;
+    }
+  }
+
+  if (!cliente) {
+    var prev = document.getElementById('vista-previa-testamento');
+    if (prev && !prev.querySelector('.aviso-sin-datos')) {
+      var aviso = document.createElement('div');
+      aviso.className = 'aviso-sin-datos alert alert-error';
+      aviso.style.cssText = 'display:flex;align-items:center;gap:0.5rem;';
+      aviso.innerHTML = '<i class="fas fa-exclamation-circle"></i><div>Complete primero el registro del Testador.</div>';
+      prev.insertBefore(aviso, prev.firstChild);
+    }
+    return;
+  }
+
+  var avisoAnt = document.querySelector('.aviso-sin-datos');
+  if (avisoAnt) avisoAnt.remove();
+
+  var dp = cliente.datosPersonales || {};
+  var dc = cliente.datosContacto || {};
+  var df = cliente.datosFamiliares || {};
+  var nombre = (dp.nombre + ' ' + dp.apellido).trim();
+  var domicilio = [dc.municipioResidencia, dc.departamentoResidencia, dc.paisResidencia].filter(Boolean).join(', ');
+
+  setSpan('testador-nombre',          nombre);
+  setSpan('testador-nombre-completo', nombre);
+  setSpan('testador-documento',       (dp.tipoDocumento || '') + ' No. ' + (dp.numeroDocumento || ''));
+  setSpan('testador-nacimiento',      formatearFecha(dp.fechaNacimiento));
+  setSpan('testador-estado-civil',    df.estadoCivil || '—');
+  setSpan('testador-domicilio',       domicilio || '—');
+  setSpan('firma-testador-nombre',    nombre);
+
+  // Bienes
+  var bienesEl = document.getElementById('bienes-testamento');
+  if (bienesEl) {
+    if (!bienes.length) {
+      bienesEl.innerHTML = '<p style="color:var(--gray);">No se declararon bienes.</p>';
+    } else {
+      bienesEl.innerHTML = bienes.map(function(b) {
+        return '<p>• <strong>' + escapeHtml(b.tipo) + '</strong>: ' + escapeHtml(b.descripcion) +
+          (b.matricula ? ' (Matr./Placa: ' + escapeHtml(b.matricula) + ')' : '') +
+          (b.valor ? ' — Valor estimado: ' + formatearMoneda(b.valor) : '') + '</p>';
+      }).join('');
+    }
+  }
+
+  // Beneficiarios
+  var benfEl = document.getElementById('beneficiarios-testamento');
+  if (benfEl) {
+    if (!beneficiarios.length) {
+      benfEl.innerHTML = '<p style="color:var(--gray);">No se registraron beneficiarios.</p>';
+    } else {
+      benfEl.innerHTML = beneficiarios.map(function(b) {
+        var texto = 'Instituyo como heredero(a) a <strong>' + escapeHtml(b.nombre) + '</strong>, ' +
+          escapeHtml(b.parentesco) + ', con ' + b.tipoAsignacion + ' del <strong>' + b.porcentaje + '%</strong>';
+        if (b.bienLegado) texto += ', correspondiente al bien: ' + escapeHtml(b.bienLegado);
+        if (b.notas) texto += '. Condición: ' + escapeHtml(b.notas);
+        return '<p>' + texto + '.</p>';
+      }).join('');
+    }
+  }
+
+  // Albacea preview
+  var facultadesTexto = { generales:'facultades generales de administración', cobro:'cobro de deudas activas', pago:'pago de deudas hereditarias', plenas:'plenas facultades testamentarias' };
+  setSpan('albacea-nombre-preview',    albacea.nombre    || '___________________');
+  setSpan('albacea-documento-preview', albacea.documento || '___________________');
+  setSpan('sustituto-nombre-preview',  albacea.sustituto || '___________________');
+  setSpan('albacea-facultades-preview',facultadesTexto[albacea.facultades] || 'facultades generales de administración');
+
+  // Testigos preview
+  var testigosEl = document.getElementById('testigos-preview');
+  if (testigosEl) {
+    var tHtml = testigos.filter(function(t){ return t.nombre; }).map(function(t,i) {
+      return '<p>Testigo ' + (i+1) + ': <strong>' + escapeHtml(t.nombre) + '</strong>' +
+        (t.documento ? ', documento ' + escapeHtml(t.documento) : '') + '</p>';
+    }).join('') || '<p style="color:var(--gray);">Testigos no registrados.</p>';
+    testigosEl.innerHTML = tHtml;
+    // Firmas
+    for (var j = 1; j <= 3; j++) {
+      setSpan('firma-testigo' + j, testigos[j-1] ? testigos[j-1].nombre : '');
+    }
+  }
+
+  // Fecha y lugar
+  setSpan('fecha-testamento', formatearFechaActual());
+  setSpan('lugar-testamento', domicilio || '—');
+}
+
+function imprimirTestamento() { window.print(); }
+
+function exportarTexto() {
+  var prev = document.getElementById('vista-previa-testamento');
+  if (!prev) return;
+  var texto = prev.innerText || prev.textContent;
+  var blob = new Blob([texto], { type: 'text/plain;charset=utf-8' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href = url; a.download = 'testamento_virtual.txt'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============================================================
+// ACTIVOS DIGITALES — tabs de la sección
+// ============================================================
+var currentTabDigital = 'dTab-albacea-content';
+var tabsDigitalMap = {
+  'dTab-albacea-content':   'dtab-albacea',
+  'dTab-activos-content':   'dtab-activos',
+  'dTab-clausulas-content': 'dtab-clausulas',
+  'dTab-bigtech-content':   'dtab-bigtech',
+  'dTab-preview-content':   'dtab-preview'
+};
+
+function mostrarTabDigital(tabId) {
+  // Ocultar todos los contenidos
+  Object.keys(tabsDigitalMap).forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+  // Quitar active de todos los botones
+  Object.values(tabsDigitalMap).forEach(function(btnId) {
+    var btn = document.getElementById(btnId);
+    if (btn) btn.classList.remove('active');
+  });
+  // Activar tab seleccionado
+  var target = document.getElementById(tabId);
+  if (target) target.classList.remove('hidden');
+  var btnActivo = document.getElementById(tabsDigitalMap[tabId]);
+  if (btnActivo) btnActivo.classList.add('active');
+  currentTabDigital = tabId;
+
+  // Si es cláusulas, regenerar con datos del albacea digital y restaurar la selección A/B/C/D
+  if (tabId === 'dTab-clausulas-content') {
+    generarClausulaAlbacea();
+    cargarSeleccionClausulas();
+  }
+  // Si es la vista previa del testamento digital, recompilar el documento completo
+  if (tabId === 'dTab-preview-content') {
+    cargarTestadorDigital();
+    cargarTestigosDigital();
+    cargarVistaPreviaTestamentoDigital();
+  }
+}
+
+// ============================================================
+// ALBACEA DIGITAL — guardar / cargar
+// ============================================================
+function guardarAlbaceaDigital() {
+  var nombre    = document.getElementById('albacea-digital-nombre') ? document.getElementById('albacea-digital-nombre').value.trim() : '';
+  var documento = document.getElementById('albacea-digital-documento') ? document.getElementById('albacea-digital-documento').value.trim() : '';
+
+  if (!nombre || !documento) {
+    mostrarError('msg-error-albacea-digital', 'Complete el nombre y documento del albacea digital.');
+    return;
+  }
+
+  var data = {
+    nombre:       nombre,
+    documento:    documento,
+    correo:       document.getElementById('albacea-digital-correo') ? document.getElementById('albacea-digital-correo').value.trim() : '',
+    telefono:     document.getElementById('albacea-digital-telefono') ? document.getElementById('albacea-digital-telefono').value.trim() : '',
+    instrucciones: document.getElementById('albacea-digital-instrucciones') ? document.getElementById('albacea-digital-instrucciones').value.trim() : '',
+    facultades: {
+      administrar:   document.getElementById('fac-administrar')   ? document.getElementById('fac-administrar').checked   : false,
+      cerrar:        document.getElementById('fac-cerrar')        ? document.getElementById('fac-cerrar').checked        : false,
+      transferir:    document.getElementById('fac-transferir')    ? document.getElementById('fac-transferir').checked    : false,
+      conmemorativa: document.getElementById('fac-conmemorativa') ? document.getElementById('fac-conmemorativa').checked : false,
+      eliminar:      document.getElementById('fac-eliminar')      ? document.getElementById('fac-eliminar').checked      : false,
+      cripto:        document.getElementById('fac-cripto')        ? document.getElementById('fac-cripto').checked        : false
+    }
+  };
+
+  try {
+    localStorage.setItem('albaceaDigitalTestamento', JSON.stringify(data));
+    mostrarExito('msg-exito-albacea-digital', 'Albacea digital guardado correctamente.');
+    actualizarStepperGlobal();
+    cargarVistaPreviaTestamentoDigital();
+  } catch(e) {
+    mostrarError('msg-error-albacea-digital', 'Error al guardar: ' + e.message);
+  }
+}
+
+function cargarAlbaceaDigital() {
+  var data = JSON.parse(localStorage.getItem('albaceaDigitalTestamento') || 'null');
+  if (!data) return;
+  var set = function(id, val) { var el = document.getElementById(id); if (el) el.value = val || ''; };
+  set('albacea-digital-nombre',        data.nombre);
+  set('albacea-digital-documento',     data.documento);
+  set('albacea-digital-correo',        data.correo);
+  set('albacea-digital-telefono',      data.telefono);
+  set('albacea-digital-instrucciones', data.instrucciones);
+  if (data.facultades) {
+    var setChk = function(id, val) { var el = document.getElementById(id); if (el) el.checked = !!val; };
+    setChk('fac-administrar',   data.facultades.administrar);
+    setChk('fac-cerrar',        data.facultades.cerrar);
+    setChk('fac-transferir',    data.facultades.transferir);
+    setChk('fac-conmemorativa', data.facultades.conmemorativa);
+    setChk('fac-eliminar',      data.facultades.eliminar);
+    setChk('fac-cripto',        data.facultades.cripto);
+  }
+}
+
+// ============================================================
+// ACTIVOS DIGITALES — guardar / cargar / eliminar
+// ============================================================
+var CATEGORIAS_BADGE = {
+  'Criptomonedas / NFTs': 'badge-economico',
+  'Banca digital': 'badge-economico',
+  'Billetera digital': 'badge-economico',
+  'Inversiones online': 'badge-economico',
+  'Red social': 'badge-perfil',
+  'Correo electrónico': 'badge-perfil',
+  'Blog / sitio web': 'badge-perfil',
+  'Cuenta gaming': 'badge-perfil',
+  'Almacenamiento nube': 'badge-nube',
+  'Fotos y videos': 'badge-nube',
+  'Documentos confidenciales': 'badge-nube',
+  'Streaming': 'badge-suscripcion',
+  'Software / licencias': 'badge-suscripcion',
+  'Suscripcion otro': 'badge-suscripcion',
+  'Dominio web': 'badge-otro',
+  'Activo digital otro': 'badge-otro'
+};
+
+var ICONOS_CATEGORIA = {
+  'Criptomonedas / NFTs': 'fa-bitcoin',
+  'Banca digital': 'fa-university',
+  'Billetera digital': 'fa-wallet',
+  'Inversiones online': 'fa-chart-line',
+  'Red social': 'fa-share-alt',
+  'Correo electrónico': 'fa-envelope',
+  'Blog / sitio web': 'fa-globe',
+  'Cuenta gaming': 'fa-gamepad',
+  'Almacenamiento nube': 'fa-cloud',
+  'Fotos y videos': 'fa-images',
+  'Documentos confidenciales': 'fa-file-lock',
+  'Streaming': 'fa-play-circle',
+  'Software / licencias': 'fa-box',
+  'Suscripcion otro': 'fa-credit-card',
+  'Dominio web': 'fa-server',
+  'Activo digital otro': 'fa-laptop-code'
+};
+
+// Sugerencias de plataforma según la categoría elegida (referenciada por el <select> en el HTML)
+var SUGERENCIAS_PLATAFORMA = {
+  'Criptomonedas / NFTs':      'Ej: Binance, Coinbase, Metamask',
+  'Banca digital':             'Ej: Nu, Lulo Bank, Nubank',
+  'Billetera digital':         'Ej: Nequi, Daviplata, PayPal',
+  'Inversiones online':        'Ej: YouTube, Twitch, Trii',
+  'Red social':                'Ej: Facebook, Instagram, TikTok, X',
+  'Correo electrónico':        'Ej: Gmail, Outlook, Yahoo',
+  'Blog / sitio web':          'Ej: WordPress, Wix',
+  'Cuenta gaming':             'Ej: Steam, PlayStation Network, Xbox Live',
+  'Almacenamiento nube':       'Ej: Google Drive, iCloud, Dropbox',
+  'Fotos y videos':            'Ej: Google Fotos, iCloud Fotos',
+  'Documentos confidenciales': 'Ej: Notion, Evernote',
+  'Streaming':                 'Ej: Netflix, Spotify, Disney+',
+  'Software / licencias':      'Ej: Microsoft 365, Adobe',
+  'Suscripcion otro':          'Ej: nombre del servicio',
+  'Dominio web':                'Ej: GoDaddy, Namecheap',
+  'Activo digital otro':       'Ej: nombre del servicio o plataforma'
+};
+
+function actualizarSubtipo() {
+  var tipo = document.getElementById('activo-digital-tipo');
+  var plat = document.getElementById('activo-digital-plataforma');
+  if (!tipo || !plat) return;
+  plat.placeholder = SUGERENCIAS_PLATAFORMA[tipo.value] || 'Nombre de la plataforma o servicio';
+}
+
+function guardarActivoDigital() {
+  var tipo  = document.getElementById('activo-digital-tipo');
+  var plat  = document.getElementById('activo-digital-plataforma');
+  if (!tipo.value) { tipo.classList.add('invalid'); mostrarError('msg-error-activo-digital', 'Seleccione la categoría del activo.'); return; }
+  tipo.classList.remove('invalid');
+  if (!plat.value.trim()) { plat.classList.add('invalid'); mostrarError('msg-error-activo-digital', 'Ingrese el nombre de la plataforma.'); return; }
+  plat.classList.remove('invalid');
+
+  var activo = {
+    tipo:          tipo.value,
+    plataforma:    plat.value.trim(),
+    identificador: document.getElementById('activo-digital-identificador').value.trim(),
+    valor:         document.getElementById('activo-digital-valor').value,
+    instruccion:   document.getElementById('activo-digital-instruccion').value,
+    notas:         document.getElementById('activo-digital-notas').value.trim(),
+    fecha:         new Date().toISOString()
+  };
+
+  try {
+    var lista = JSON.parse(localStorage.getItem('activosDigitalesTestamento')) || [];
+    lista.push(activo);
+    localStorage.setItem('activosDigitalesTestamento', JSON.stringify(lista));
+    mostrarExito('msg-exito-activo-digital', 'Activo digital registrado.');
+    ['activo-digital-tipo','activo-digital-plataforma','activo-digital-identificador','activo-digital-valor','activo-digital-notas'].forEach(function(id) {
+      var el = document.getElementById(id); if (el) { el.value = ''; el.classList.remove('invalid'); }
+    });
+    actualizarSubtipo();
+    cargarActivosDigitales();
+    actualizarStepperGlobal();
+    cargarVistaPreviaTestamentoDigital();
+  } catch(e) {
+    mostrarError('msg-error-activo-digital', 'Error: ' + e.message);
+  }
+}
+
+function cargarActivosDigitales() {
+  var container = document.getElementById('activos-digitales-container');
+  var countEl   = document.getElementById('activos-digitales-count');
+  if (!container) return;
+  var lista = JSON.parse(localStorage.getItem('activosDigitalesTestamento')) || [];
+  if (countEl) countEl.textContent = lista.length;
+  if (lista.length === 0) {
+    container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;">No hay activos digitales registrados aún.</p>';
+    return;
+  }
+  var html = '';
+  lista.forEach(function(a, i) {
+    var badgeClass = CATEGORIAS_BADGE[a.tipo] || 'badge-otro';
+    var icono      = ICONOS_CATEGORIA[a.tipo]  || 'fa-laptop-code';
+    html += '<div class="activo-digital-item">' +
+      '<div class="activo-digital-info">' +
+      '<h4><i class="fas ' + icono + '"></i> ' + escapeHtml(a.plataforma) + '</h4>' +
+      '<span class="activo-digital-badge ' + badgeClass + '">' + escapeHtml(a.tipo) + '</span>' +
+      (a.identificador ? '<p><strong>Identificador:</strong> ' + escapeHtml(a.identificador) + '</p>' : '') +
+      '<p><strong>Instrucción:</strong> ' + escapeHtml(a.instruccion) + '</p>' +
+      (a.valor ? '<p><strong>Valor estimado:</strong> ' + formatearMoneda(a.valor) + '</p>' : '') +
+      (a.notas ? '<p><strong>Notas:</strong> ' + escapeHtml(a.notas) + '</p>' : '') +
+      '</div>' +
+      '<div class="activo-digital-actions"><button onclick="confirmarEliminarActivoDigital(' + i + ')"><i class="fas fa-trash"></i> Eliminar</button></div>' +
+      '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function confirmarEliminarActivoDigital(index) {
+  abrirModal('Eliminar activo digital', '¿Está seguro de eliminar este activo digital?', function() {
+    var lista = JSON.parse(localStorage.getItem('activosDigitalesTestamento')) || [];
+    lista.splice(index, 1);
+    localStorage.setItem('activosDigitalesTestamento', JSON.stringify(lista));
+    cargarActivosDigitales();
+    cargarVistaPreviaTestamentoDigital();
+  });
+}
+
+// ============================================================
+// CLÁUSULAS NOTARIALES — generar texto dinámico
+// ============================================================
+// Genera el texto de designación del Albacea Digital a partir de los datos guardados.
+// Se usa tanto en la Cláusula A (pestaña Cláusulas Notariales) como en la vista previa
+// del Testamento de Activos Digitales, para no duplicar la lógica.
+function generarTextoAlbaceaDigital(data) {
+  if (!data || !data.nombre) return '';
+  var facultadesTextos = [];
+  if (data.facultades) {
+    if (data.facultades.administrar)   facultadesTextos.push('la administración y gestión de cuentas y perfiles digitales');
+    if (data.facultades.cerrar)        facultadesTextos.push('la cancelación de suscripciones y servicios de pago');
+    if (data.facultades.transferir)    facultadesTextos.push('la transferencia de activos financieros digitales a los herederos');
+    if (data.facultades.conmemorativa) facultadesTextos.push('la conversión de perfiles sociales en cuentas conmemorativas');
+    if (data.facultades.eliminar)      facultadesTextos.push('la eliminación definitiva de archivos y perfiles privados');
+    if (data.facultades.cripto)        facultadesTextos.push('la gestión y recuperación de criptomonedas ante exchanges e intermediarios');
+  }
+  var facultadesStr = facultadesTextos.length
+    ? facultadesTextos.join('; ')
+    : 'la administración, gestión, migración, cierre o transformación en cuentas conmemorativas de la totalidad del patrimonio digital';
+
+  return 'Nombro como Albacea Digital a ' + data.nombre + ', identificado con C.C. ' + data.documento +
+    (data.correo ? ', correo electrónico ' + data.correo : '') +
+    ', para que, con exclusión de cualquier otra persona, asuma las siguientes funciones respecto a mi patrimonio digital: ' + facultadesStr +
+    '. Lo anterior incluye cuentas de correo electrónico, perfiles en redes sociales, archivos en la nube, suscripciones digitales y activos criptográficos de mi propiedad.' +
+    (data.instrucciones ? ' Instrucciones adicionales: ' + data.instrucciones : '');
+}
+
+function generarClausulaAlbacea() {
+  var data = JSON.parse(localStorage.getItem('albaceaDigitalTestamento') || 'null');
+  var el   = document.getElementById('clausula-albacea-digital-texto');
+  if (!el) return;
+
+  var texto = generarTextoAlbaceaDigital(data);
+  if (!texto) {
+    el.innerHTML = '<em style="color:var(--warning);">⚠ Primero guarda los datos del Albacea Digital en la pestaña "Albacea Digital" para generar esta cláusula automáticamente.</em>';
+    return;
+  }
+  el.textContent = '"' + texto + '"';
+}
+
+// ============================================================
+// SELECCIÓN DE CLÁUSULAS (A/B/C/D) — cuáles se incorporan al documento final
+// ============================================================
+var CLAUSULAS_DIGITAL_DEFAULT = { A: true, B: true, C: false, D: true };
+
+function guardarSeleccionClausulas() {
+  var seleccion = {};
+  ['A', 'B', 'C', 'D'].forEach(function(letra) {
+    var chk = document.getElementById('check-clausula-' + letra);
+    seleccion[letra] = chk ? chk.checked : true;
+    var card = chk ? chk.closest('.clausula-card') : null;
+    if (card) card.classList.toggle('clausula-inactiva', !seleccion[letra]);
+  });
+  localStorage.setItem('clausulasDigitalSeleccion', JSON.stringify(seleccion));
+  cargarVistaPreviaTestamentoDigital();
+}
+
+function cargarSeleccionClausulas() {
+  var seleccion = JSON.parse(localStorage.getItem('clausulasDigitalSeleccion') || 'null') || CLAUSULAS_DIGITAL_DEFAULT;
+  ['A', 'B', 'C', 'D'].forEach(function(letra) {
+    var chk = document.getElementById('check-clausula-' + letra);
+    if (!chk) return;
+    chk.checked = !!seleccion[letra];
+    var card = chk.closest('.clausula-card');
+    if (card) card.classList.toggle('clausula-inactiva', !chk.checked);
+  });
+}
+
+// ============================================================
+// TESTIGOS DEL TESTAMENTO DE ACTIVOS DIGITALES (formalismo Art. 1068/1070 CC)
+// ============================================================
+function guardarTestigosDigital() {
+  var testigos = [1, 2, 3].map(function(n) {
+    var nombreEl    = document.getElementById('testigo' + n + '-digital-nombre');
+    var documentoEl = document.getElementById('testigo' + n + '-digital-documento');
+    return {
+      nombre: nombreEl ? nombreEl.value.trim() : '',
+      documento: documentoEl ? documentoEl.value.trim() : ''
+    };
+  });
+  localStorage.setItem('testigosDigitalTestamento', JSON.stringify(testigos));
+  mostrarExito('msg-exito-testigos-digital', 'Testigos guardados correctamente.');
+  cargarVistaPreviaTestamentoDigital();
+}
+
+function cargarTestigosDigital() {
+  var testigos = JSON.parse(localStorage.getItem('testigosDigitalTestamento') || 'null') || [];
+  testigos.forEach(function(t, i) {
+    var n = i + 1;
+    var nombreEl    = document.getElementById('testigo' + n + '-digital-nombre');
+    var documentoEl = document.getElementById('testigo' + n + '-digital-documento');
+    if (nombreEl)    nombreEl.value    = t.nombre    || '';
+    if (documentoEl) documentoEl.value = t.documento || '';
+  });
+}
+
+// ============================================================
+// TESTAMENTO DE ACTIVOS DIGITALES — identificación, vista previa, imprimir/exportar
+// (Documento independiente del testamento general; no requiere Testador/Bienes/Beneficiarios)
+// ============================================================
+function guardarTestadorDigital() {
+  var nombre    = document.getElementById('testador-digital-nombre')    ? document.getElementById('testador-digital-nombre').value.trim()    : '';
+  var documento = document.getElementById('testador-digital-documento') ? document.getElementById('testador-digital-documento').value.trim() : '';
+  var domicilio = document.getElementById('testador-digital-domicilio') ? document.getElementById('testador-digital-domicilio').value.trim() : '';
+
+  if (!nombre || !documento) {
+    mostrarError('msg-error-testador-digital', 'Ingrese nombre y documento del testador.');
+    return;
+  }
+
+  var data = { nombre: nombre, documento: documento, domicilio: domicilio };
+  try {
+    localStorage.setItem('testadorDigitalTestamento', JSON.stringify(data));
+    mostrarExito('msg-exito-testador-digital', 'Identificación guardada correctamente.');
+    cargarVistaPreviaTestamentoDigital();
+  } catch(e) {
+    mostrarError('msg-error-testador-digital', 'Error al guardar: ' + e.message);
+  }
+}
+
+function cargarTestadorDigital() {
+  var data = JSON.parse(localStorage.getItem('testadorDigitalTestamento') || 'null');
+  if (!data) return;
+  var set = function(id, val) { var el = document.getElementById(id); if (el) el.value = val || ''; };
+  set('testador-digital-nombre',    data.nombre);
+  set('testador-digital-documento', data.documento);
+  set('testador-digital-domicilio', data.domicilio);
+}
+
+function cargarVistaPreviaTestamentoDigital() {
+  var prev = document.getElementById('vista-previa-testamento-digital');
+  if (!prev) return; // la pestaña aún no existe en el DOM en este momento
+
+  var testador          = JSON.parse(localStorage.getItem('testadorDigitalTestamento') || 'null');
+  var albaceaDigital     = JSON.parse(localStorage.getItem('albaceaDigitalTestamento') || 'null');
+  var activosDigitales   = JSON.parse(localStorage.getItem('activosDigitalesTestamento')) || [];
+  var testigos           = JSON.parse(localStorage.getItem('testigosDigitalTestamento') || 'null') || [];
+  var seleccion           = JSON.parse(localStorage.getItem('clausulasDigitalSeleccion') || 'null') || CLAUSULAS_DIGITAL_DEFAULT;
+
+  // I. Identificación
+  setSpan('testador-digital-nombre-preview',    testador ? testador.nombre    : '___________________');
+  setSpan('testador-digital-documento-preview', testador ? testador.documento : '___________________');
+  setSpan('testador-digital-domicilio-preview', (testador && testador.domicilio) ? testador.domicilio : '___________________');
+
+  // III. Cláusulas notariales incorporadas — solo las marcadas como seleccionadas (A/B/C/D)
+  var TODAS_LAS_CLAUSULAS = [
+    { letra: 'A', titulo: 'Designación de Albacea Digital', texto: function () { return generarTextoAlbaceaDigital(albaceaDigital); } },
+    { letra: 'B', titulo: 'Acceso a Activos Financieros Digitales', textoId: 'clausula-financiera-texto' },
+    { letra: 'C', titulo: 'Mandato de Destrucción de Datos Privados', textoId: 'clausula-destruccion-texto' },
+    { letra: 'D', titulo: 'Autorización de Datos Personales Post-Mortem (Ley 1581/2012)', textoId: 'clausula-datos-texto' }
+  ];
+  var clEl = document.getElementById('clausulas-testamento-preview');
+  if (clEl) {
+    var incluidas = TODAS_LAS_CLAUSULAS.filter(function (c) { return seleccion[c.letra]; });
+    if (!incluidas.length) {
+      clEl.innerHTML = '<p style="color:var(--gray);">No se ha seleccionado ninguna cláusula. Márcalas en la pestaña "Cláusulas Notariales".</p>';
+    } else {
+      clEl.innerHTML = incluidas.map(function (c) {
+        var texto = c.texto ? c.texto() : '';
+        if (!texto && c.textoId) {
+          var origen = document.getElementById(c.textoId);
+          texto = origen ? (origen.textContent || origen.innerText).trim().replace(/^"|"$/g, '') : '';
+        }
+        if (!texto) return '';
+        return '<p><strong>Cláusula ' + c.letra + ' — ' + escapeHtml(c.titulo) + ':</strong> ' + escapeHtml(texto) + '</p>';
+      }).join('');
+    }
+  }
+
+  // IV. Activos digitales
+  var actEl = document.getElementById('activos-digitales-testamento-preview');
+  if (actEl) {
+    if (!activosDigitales.length) {
+      actEl.innerHTML = '<p style="color:var(--gray);">Aún no se han registrado activos digitales. Agrégalos en la pestaña "Mis Activos".</p>';
+    } else {
+      actEl.innerHTML = activosDigitales.map(function(a) {
+        return '<p>• <strong>' + escapeHtml(a.tipo) + '</strong> — ' + escapeHtml(a.plataforma) +
+          (a.identificador ? ' (cuenta: ' + escapeHtml(a.identificador) + ')' : '') +
+          ' → Instrucción: ' + escapeHtml(a.instruccion) +
+          (a.valor ? ' — Valor estimado: ' + formatearMoneda(a.valor) : '') +
+          (a.notas ? '. ' + escapeHtml(a.notas) : '') + '</p>';
+      }).join('');
+    }
+  }
+
+  // V. Cierre y firma
+  setSpan('fecha-testamento-digital', formatearFechaActual());
+  setSpan('lugar-testamento-digital', (testador && testador.domicilio) ? testador.domicilio : '—');
+  setSpan('firma-testador-digital-nombre', testador ? testador.nombre : '');
+  setSpan('firma-albacea-digital-nombre',  (seleccion.A && albaceaDigital) ? albaceaDigital.nombre : '');
+  setSpan('firma-testigo1-digital', testigos[0] ? testigos[0].nombre : '');
+  setSpan('firma-testigo2-digital', testigos[1] ? testigos[1].nombre : '');
+  setSpan('firma-testigo3-digital', testigos[2] ? testigos[2].nombre : '');
+
+  // La firma del Albacea Digital solo se muestra si la Cláusula A fue incluida
+  var boxAlbacea = document.getElementById('firma-box-albacea-digital');
+  if (boxAlbacea) boxAlbacea.style.display = seleccion.A ? '' : 'none';
+}
+
+function imprimirTestamentoDigital() {
+  mostrarTabDigital('dTab-preview-content');
+  window.print();
+}
+
+function exportarTextoDigital() {
+  var prev = document.getElementById('vista-previa-testamento-digital');
+  if (!prev) return;
+  var texto = prev.innerText || prev.textContent;
+  var blob = new Blob([texto], { type: 'text/plain;charset=utf-8' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href = url; a.download = 'testamento_activos_digitales.txt'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function copiarClausula(elementId) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  var texto = el.textContent || el.innerText;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(texto).then(function() {
+      mostrarExito('msg-copiar', 'Cláusula copiada al portapapeles.');
+    });
+  } else {
+    // Fallback para navegadores que no soportan clipboard API
+    var ta = document.createElement('textarea');
+    ta.value = texto;
+    ta.style.position = 'fixed'; ta.style.top = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    mostrarExito('msg-copiar', 'Cláusula copiada al portapapeles.');
+  }
+}
+
+// Inicializar la sección digital al mostrarla
+var _mostrarPaginaOriginal = mostrarPagina;
+mostrarPagina = function(paginaId) {
+  _mostrarPaginaOriginal(paginaId);
+  if (paginaId === 'digital') {
+    cargarAlbaceaDigital();
+    cargarActivosDigitales();
+    cargarTestadorDigital();
+    mostrarTabDigital('dTab-albacea-content');
+  }
+};
+
+  </script>
+</body>
+</html>
