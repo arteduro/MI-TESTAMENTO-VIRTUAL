@@ -54,20 +54,16 @@ body {
 .header-subtitle {
   display: block; font-size: 0.72rem; opacity: 0.8; font-weight: 300;
 }
-.header-checklist {
-  display: flex; gap: 0.5rem; flex-wrap: wrap;
+/* Botón "Reiniciar aplicación" (borra localStorage y deja la app como nueva) */
+.btn-reiniciar-app {
+  background: rgba(255,255,255,0.12); color: white;
+  border: 1px solid rgba(255,255,255,0.35);
+  padding: 0.5rem 1rem; border-radius: 0.5rem;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 0.45rem;
+  font-family: 'Poppins', sans-serif; transition: all 0.2s; flex-shrink: 0;
 }
-.checklist-item {
-  font-size: 0.75rem; font-weight: 500;
-  background: rgba(255,255,255,0.15);
-  padding: 0.25rem 0.6rem;
-  border-radius: 1rem;
-  display: flex; align-items: center; gap: 0.3rem;
-  transition: all 0.3s;
-}
-.checklist-item i { font-size: 0.6rem; color: rgba(255,255,255,0.5); }
-.checklist-item.done { background: rgba(75,181,67,0.3); }
-.checklist-item.done i { color: #7fff7a; }
+.btn-reiniciar-app:hover { background: rgba(255,255,255,0.25); }
 
 /* ============ NAV ============ */
 nav {
@@ -118,6 +114,22 @@ nav button.nav-active { background: var(--secondary); color: white; }
 .landing-accent { color: var(--primary); }
 .landing-desc { color: var(--gray); font-size: 0.97rem; margin-bottom: 2rem; }
 .landing-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* Registro Único del Testador — estado en el landing */
+.landing-registro-status {
+  display: none; align-items: center; justify-content: center; gap: 0.75rem;
+  background: rgba(75,181,67,0.1); border: 1px solid rgba(75,181,67,0.3);
+  color: #2e7d32; border-radius: 0.6rem; padding: 0.7rem 1.25rem;
+  font-size: 0.9rem; font-weight: 500; margin: 0 auto 1.5rem; max-width: 520px;
+  flex-wrap: wrap;
+}
+.landing-registro-status .btn-editar-identidad {
+  padding: 0.3rem 0.8rem; font-size: 0.78rem;
+}
+.landing-registro-nota {
+  color: var(--gray); font-size: 0.82rem; margin: 0.75rem 0 0;
+  display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+}
 .btn-hero {
   background: var(--primary); color: white;
   border: none; padding: 0.875rem 2rem; border-radius: 0.5rem;
@@ -290,6 +302,17 @@ button.save {
   font-family: 'Poppins', sans-serif;
 }
 button.save:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+/* Notificar al Albacea Digital por correo (abre el cliente de correo con el aviso redactado) */
+.btn-notificar-albacea {
+  background: white; color: var(--secondary); border: 1.5px solid var(--secondary);
+  padding: 0.8rem 1.5rem; border-radius: 0.5rem; font-weight: 500;
+  cursor: pointer; font-size: 0.9rem; margin-left: 0.75rem;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: 'Poppins', sans-serif; transition: all 0.2s;
+}
+.btn-notificar-albacea:hover { background: var(--secondary); color: white; }
+
 button.next-tab {
   background: var(--success); color: white;
   border: none; padding: 0.8rem 1.5rem; border-radius: 0.5rem;
@@ -570,6 +593,22 @@ nav button.nav-locked::after {
   border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1.5rem;
 }
 .albacea-section h4 { margin: 0 0 0.875rem; color: var(--primary); font-size: 1rem; }
+
+/* Identidad del testador (registro único, reutilizado en Testamento Digital) */
+.identidad-resumen {
+  background: white; border: 1px solid var(--border); border-radius: 0.6rem;
+  padding: 1rem 1.25rem; margin-bottom: 1rem;
+}
+.identidad-resumen p { margin: 0 0 0.4rem; font-size: 0.9rem; color: var(--dark); }
+.identidad-resumen p:last-child { margin-bottom: 0; }
+.btn-editar-identidad {
+  background: white; color: var(--primary); border: 1.5px solid var(--primary);
+  padding: 0.5rem 1.1rem; border-radius: 0.5rem; font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;
+  font-family: 'Poppins', sans-serif; transition: all 0.2s;
+}
+.btn-editar-identidad:hover { background: var(--primary); color: white; }
+
 .will-preview {
   background: var(--bg); padding: 1.75rem;
   border-radius: 0.75rem; border: 1px solid var(--border); margin-top: 1rem;
@@ -661,7 +700,8 @@ footer {
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .app-header { padding: 0.75rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
-  .header-checklist { display: none; }
+  .btn-reiniciar-texto { display: none; }
+  .btn-reiniciar-app { padding: 0.5rem 0.7rem; }
   .container { padding: 1.25rem; margin: 0.75rem; }
   nav button { padding: 0.5rem 0.75rem; font-size: 0.78rem; }
   .form-row { flex-direction: column; gap: 0; }
@@ -885,6 +925,19 @@ footer {
 .digital-conflicto-box h4 { color: var(--danger); margin: 0 0 0.75rem; font-size: 0.97rem; }
 .digital-conflicto-box p { font-size: 0.87rem; color: var(--dark); margin: 0 0 0.5rem; line-height: 1.6; }
 .digital-conflicto-box p:last-child { margin-bottom: 0; }
+
+/* CTA para generar el documento final (al terminar Guía Big Tech) */
+.cta-generar-documento {
+  background: linear-gradient(135deg, rgba(63,55,201,0.08) 0%, rgba(67,97,238,0.06) 100%);
+  border: 1.5px solid rgba(63,55,201,0.3); border-radius: 0.85rem;
+  padding: 1.5rem; margin-top: 1.5rem;
+  display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+}
+.cta-generar-documento > i { font-size: 1.8rem; color: var(--secondary); flex-shrink: 0; }
+.cta-generar-documento div { flex: 1; min-width: 220px; }
+.cta-generar-documento h4 { margin: 0 0 0.35rem; font-size: 1rem; color: var(--dark); }
+.cta-generar-documento p { margin: 0; font-size: 0.87rem; color: var(--gray); }
+.cta-generar-documento .btn-hero { flex-shrink: 0; }
 
 /* Will preview sección digital */
 .will-preview .section.digital-section .section-title {

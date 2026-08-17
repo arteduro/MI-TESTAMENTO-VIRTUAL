@@ -11,6 +11,42 @@ var currentTab = 'datos-personales';
 var pestanas = ['datos-personales', 'datos-contacto', 'datos-familiares'];
 var pendingModalCallback = null;
 
+// Los 32 departamentos de Colombia + el Distrito Capital, en orden alfabético.
+var DEPARTAMENTOS_COLOMBIA = [
+  'Amazonas', 'Antioquia', 'Arauca', 'Atlántico', 'Bogotá D.C.', 'Bolívar',
+  'Boyacá', 'Caldas', 'Caquetá', 'Casanare', 'Cauca', 'Cesar', 'Chocó',
+  'Córdoba', 'Cundinamarca', 'Guainía', 'Guaviare', 'Huila', 'La Guajira',
+  'Magdalena', 'Meta', 'Nariño', 'Norte de Santander', 'Putumayo', 'Quindío',
+  'Risaralda', 'San Andrés y Providencia', 'Santander', 'Sucre', 'Tolima',
+  'Valle del Cauca', 'Vaupés', 'Vichada'
+];
+
+// Repuebla el <select> de departamento según el país elegido: los 32 departamentos
+// de Colombia si el país es Colombia, o "No aplica / Otro" para el resto.
+function actualizarDepartamentos(paisSelectId, deptoSelectId) {
+  var paisEl  = document.getElementById(paisSelectId);
+  var deptoEl = document.getElementById(deptoSelectId);
+  if (!paisEl || !deptoEl) return;
+
+  var valorPrevio = deptoEl.value;
+  var opciones = ['<option value="">Seleccione...</option>'];
+
+  if (paisEl.value === 'Colombia') {
+    DEPARTAMENTOS_COLOMBIA.forEach(function (d) {
+      opciones.push('<option value="' + d + '">' + d + '</option>');
+    });
+  } else {
+    opciones.push('<option value="No aplica">No aplica</option>');
+    opciones.push('<option value="Otro">Otro</option>');
+  }
+  deptoEl.innerHTML = opciones.join('');
+
+  // Si el valor anterior sigue siendo válido en la nueva lista, se conserva
+  if (valorPrevio && [...deptoEl.options].some(function (o) { return o.value === valorPrevio; })) {
+    deptoEl.value = valorPrevio;
+  }
+}
+
 // ============================================================
 // INICIALIZACIÓN
 // ============================================================
@@ -21,6 +57,10 @@ document.addEventListener('DOMContentLoaded', function () {
   // Calcular edad al cambiar fecha
   var fechaInput = document.getElementById('fecha-nacimiento');
   if (fechaInput) fechaInput.addEventListener('change', calcularEdad);
+  // Inicializar EmailJS (para notificar por correo al Albacea Digital)
+  if (typeof emailjs !== 'undefined') {
+    emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
+  }
 });
 
 // ============================================================
@@ -98,6 +138,14 @@ function resaltarNavPrincipal(paginaId) {
 }
 
 function mostrarPagina(paginaId) {
+  // Compuerta especial: "Testamento Digital" exige el registro único del Testador
+  // (mismo registro que usa el Testamento Clásico), para no duplicar datos.
+  if (paginaId === 'digital' && !pasoCompletado('cliente')) {
+    localStorage.setItem('destinoTrasRegistroCliente', 'digital');
+    mostrarPagina('cliente');
+    return;
+  }
+
   // Compuerta: si el paso anterior no está completo, bloquear
   if (paginaId !== 'inicio' && paginaId !== 'beneficios' && paginaId !== 'digital') {
     if (!pasoAnteriorCompletado(paginaId)) {
@@ -118,6 +166,7 @@ function mostrarPagina(paginaId) {
   document.querySelectorAll('.alert').forEach(function (a) { a.style.display = 'none'; });
 
   // Acciones por página
+  if (paginaId === 'inicio')      { actualizarLandingRegistro(); }
   if (paginaId === 'cliente')     { resetTabs(); }
   if (paginaId === 'bienes')      { cargarBienes(); }
   if (paginaId === 'beneficiario') { cargarBeneficiarios(); actualizarBadgePorcentaje(); }
@@ -126,6 +175,36 @@ function mostrarPagina(paginaId) {
   actualizarNavLocks();
   actualizarStepperGlobal();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Muestra en el landing el estado del Registro Único del Testador:
+// si aún no existe, solo se ve el CTA de registro; una vez creado, aparecen
+// las dos opciones de testamento (Clásico / Digital / ambos).
+function actualizarLandingRegistro() {
+  var registrado         = pasoCompletado('cliente');
+  var accionesRegistro   = document.getElementById('landing-actions-registro');
+  var notaRegistro       = document.getElementById('landing-registro-nota');
+  var accionesTestamentos = document.getElementById('landing-actions-testamentos');
+  var statusBox          = document.getElementById('landing-registro-status');
+
+  if (accionesRegistro)    accionesRegistro.style.display    = registrado ? 'none' : 'flex';
+  if (notaRegistro)        notaRegistro.style.display        = registrado ? 'none' : 'flex';
+  if (accionesTestamentos) accionesTestamentos.style.display = registrado ? 'flex' : 'none';
+
+  if (statusBox) {
+    if (registrado) {
+      var cliente = JSON.parse(localStorage.getItem('clienteTestamento') || 'null');
+      var dp = (cliente && cliente.datosPersonales) || {};
+      var nombre = (dp.nombre + ' ' + dp.apellido).trim();
+      statusBox.style.display = 'flex';
+      statusBox.innerHTML =
+        '<i class="fas fa-check-circle"></i> <span>Testador registrado: <strong>' + escapeHtml(nombre) + '</strong></span> ' +
+        '<button class="btn-editar-identidad" onclick="mostrarPagina(\'cliente\')"><i class="fas fa-pencil-alt"></i> Editar</button>';
+    } else {
+      statusBox.style.display = 'none';
+      statusBox.innerHTML = '';
+    }
+  }
 }
 
 // Muestra un banner de sección bloqueada dentro del contenedor
@@ -228,6 +307,8 @@ function editarPaso(pasoId) {
 function resetTabs() {
   currentTab = 'datos-personales';
   updateTabNavigation();
+  actualizarDepartamentos('pais-nacimiento', 'departamento-nacimiento');
+  actualizarDepartamentos('pais-residencia', 'departamento-residencia');
 }
 
 function updateTabNavigation() {
@@ -316,8 +397,9 @@ function abrirModal(titulo, mensaje, callback) {
   document.getElementById('modal-mensaje').textContent = mensaje;
   pendingModalCallback = callback;
   document.getElementById('btn-modal-ok').onclick = function () {
+    var callbackPendiente = pendingModalCallback; // capturar ANTES de que cerrarModal() lo anule
     cerrarModal();
-    if (pendingModalCallback) pendingModalCallback();
+    if (callbackPendiente) callbackPendiente();
   };
   document.getElementById('modal-confirmar').classList.remove('hidden');
 }
@@ -325,6 +407,20 @@ function abrirModal(titulo, mensaje, callback) {
 function cerrarModal() {
   document.getElementById('modal-confirmar').classList.add('hidden');
   pendingModalCallback = null;
+}
+
+// Borra todos los datos guardados (registro del testador, testamento clásico,
+// testamento digital, activos, cláusulas, testigos) y deja la aplicación como nueva.
+// Útil para pruebas, o para que un usuario distinto empiece de cero en el mismo navegador.
+function confirmarReiniciarApp() {
+  abrirModal(
+    '¿Reiniciar aplicación?',
+    'Esto borrará permanentemente todos los datos guardados: registro del testador, Testamento Clásico, Testamento de Activos Digitales, activos y testigos. Esta acción no se puede deshacer.',
+    function () {
+      localStorage.clear();
+      location.reload();
+    }
+  );
 }
 
 // ============================================================
@@ -494,6 +590,28 @@ function guardarCliente() {
   try {
     localStorage.setItem('clienteTestamento', JSON.stringify(clienteData));
     var nombre = clienteData.datosPersonales.nombre + ' ' + clienteData.datosPersonales.apellido;
+
+    // Si el usuario llegó aquí para poder acceder al Testamento Digital, lo llevamos allá
+    var destinoPendiente = localStorage.getItem('destinoTrasRegistroCliente');
+    localStorage.removeItem('destinoTrasRegistroCliente');
+
+    if (destinoPendiente === 'digital') {
+      mostrarTransicion({
+        idPasoActual: 'cliente',
+        siguientePaso: 'digital',
+        icono: 'fa-user-check',
+        claseIcono: 'exito',
+        titulo: '¡Testador registrado!',
+        subtitulo: 'Tus datos han sido guardados. Ahora continuemos con tu Testamento de Activos Digitales.',
+        resumen: [
+          'Nombre: ' + nombre,
+          'Documento: ' + clienteData.datosPersonales.tipoDocumento + ' ' + clienteData.datosPersonales.numeroDocumento,
+          'Residencia: ' + clienteData.datosContacto.municipioResidencia + ', ' + clienteData.datosContacto.paisResidencia
+        ]
+      });
+      return;
+    }
+
     mostrarTransicion({
       idPasoActual: 'cliente',
       siguientePaso: 'bienes',
@@ -926,6 +1044,7 @@ function exportarTexto() {
 // ACTIVOS DIGITALES — tabs de la sección
 // ============================================================
 var currentTabDigital = 'dTab-albacea-content';
+var DIGITAL_PASOS = ['dTab-albacea-content', 'dTab-activos-content', 'dTab-clausulas-content', 'dTab-bigtech-content', 'dTab-preview-content'];
 var tabsDigitalMap = {
   'dTab-albacea-content':   'dtab-albacea',
   'dTab-activos-content':   'dtab-activos',
@@ -933,8 +1052,73 @@ var tabsDigitalMap = {
   'dTab-bigtech-content':   'dtab-bigtech',
   'dTab-preview-content':   'dtab-preview'
 };
+var NOMBRES_TABS_DIGITAL = {
+  'dTab-albacea-content':   'Albacea Digital',
+  'dTab-activos-content':   'Mis Activos',
+  'dTab-clausulas-content': 'Cláusulas Notariales',
+  'dTab-bigtech-content':   'Guía Big Tech',
+  'dTab-preview-content':   'Vista Previa y Firma'
+};
+
+// El Testamento de Activos Digitales se comporta igual que el Testamento Clásico:
+// solo se avanza al módulo siguiente si el módulo actual quedó completo.
+function pasoDigitalCompletado(tabId) {
+  switch (tabId) {
+    case 'dTab-albacea-content':
+      return !!localStorage.getItem('albaceaDigitalTestamento');
+    case 'dTab-activos-content':
+      return (JSON.parse(localStorage.getItem('activosDigitalesTestamento')) || []).length > 0;
+    case 'dTab-clausulas-content': {
+      var seleccion = JSON.parse(localStorage.getItem('clausulasDigitalSeleccion') || 'null') || CLAUSULAS_DIGITAL_DEFAULT;
+      return Object.keys(seleccion).some(function (k) { return seleccion[k]; });
+    }
+    case 'dTab-bigtech-content':
+      return true; // paso informativo, no requiere datos
+    default:
+      return true;
+  }
+}
+
+function pasoAnteriorDigitalCompletado(tabId) {
+  var idx = DIGITAL_PASOS.indexOf(tabId);
+  if (idx <= 0) return true;
+  return pasoDigitalCompletado(DIGITAL_PASOS[idx - 1]);
+}
+
+function actualizarTabsDigitalLocks() {
+  DIGITAL_PASOS.forEach(function (tabId) {
+    var btn = document.getElementById(tabsDigitalMap[tabId]);
+    if (!btn) return;
+    if (pasoAnteriorDigitalCompletado(tabId)) btn.classList.remove('disabled');
+    else btn.classList.add('disabled');
+  });
+}
+
+function mostrarAvisoTabDigitalBloqueada(nombrePasoRequerido) {
+  var box = document.getElementById('msg-tab-digital-bloqueada');
+  var txt = document.getElementById('msg-tab-digital-bloqueada-texto');
+  if (!box || !txt) return;
+  txt.textContent = 'Completa primero el módulo "' + nombrePasoRequerido + '" para continuar.';
+  box.style.display = 'flex';
+  box.style.alignItems = 'center';
+  box.style.gap = '0.5rem';
+}
+
+function ocultarAvisoTabDigitalBloqueada() {
+  var box = document.getElementById('msg-tab-digital-bloqueada');
+  if (box) box.style.display = 'none';
+}
 
 function mostrarTabDigital(tabId) {
+  // Compuerta: solo se avanza si el módulo anterior está completo (igual que el Testamento Clásico)
+  if (!pasoAnteriorDigitalCompletado(tabId)) {
+    var idx = DIGITAL_PASOS.indexOf(tabId);
+    var requerido = DIGITAL_PASOS[idx - 1];
+    mostrarAvisoTabDigitalBloqueada(NOMBRES_TABS_DIGITAL[requerido] || requerido);
+    return;
+  }
+  ocultarAvisoTabDigitalBloqueada();
+
   // Ocultar todos los contenidos
   Object.keys(tabsDigitalMap).forEach(function(id) {
     var el = document.getElementById(id);
@@ -959,10 +1143,12 @@ function mostrarTabDigital(tabId) {
   }
   // Si es la vista previa del testamento digital, recompilar el documento completo
   if (tabId === 'dTab-preview-content') {
-    cargarTestadorDigital();
+    pintarIdentidadDigital();
     cargarTestigosDigital();
     cargarVistaPreviaTestamentoDigital();
   }
+
+  actualizarTabsDigitalLocks();
 }
 
 // ============================================================
@@ -997,7 +1183,11 @@ function guardarAlbaceaDigital() {
     localStorage.setItem('albaceaDigitalTestamento', JSON.stringify(data));
     mostrarExito('msg-exito-albacea-digital', 'Albacea digital guardado correctamente.');
     actualizarStepperGlobal();
+    actualizarTabsDigitalLocks();
     cargarVistaPreviaTestamentoDigital();
+
+    var btnNotificar = document.getElementById('btn-notificar-albacea');
+    if (btnNotificar) btnNotificar.classList.toggle('hidden', !data.correo);
   } catch(e) {
     mostrarError('msg-error-albacea-digital', 'Error al guardar: ' + e.message);
   }
@@ -1021,6 +1211,98 @@ function cargarAlbaceaDigital() {
     setChk('fac-eliminar',      data.facultades.eliminar);
     setChk('fac-cripto',        data.facultades.cripto);
   }
+  var btnNotificar = document.getElementById('btn-notificar-albacea');
+  if (btnNotificar) btnNotificar.classList.toggle('hidden', !data.correo);
+}
+
+// Abre el cliente de correo del usuario con un aviso ya redactado para el Albacea Digital.
+// Nota técnica: esta app es un único archivo HTML sin backend, por lo que no puede enviar
+// correos de forma automática y silenciosa (eso requeriría un servidor o un servicio como
+// EmailJS con cuenta propia). Este botón usa el protocolo "mailto:", que abre el programa
+// de correo del testador con el mensaje ya listo para revisar y enviar con un clic.
+// Configuración de EmailJS (todos son valores públicos, seguros para incluir en el navegador;
+// la Clave Privada de EmailJS NUNCA debe ponerse aquí ni en ningún código de frontend).
+var EMAILJS_CONFIG = {
+  serviceId:  'service_27iifcn',
+  templateId: 'template_6y7yysl',
+  publicKey:  's968OYzOoQHYrv-11'
+};
+
+// Envía automáticamente el aviso de designación al Albacea Digital vía EmailJS.
+// Si el envío falla (sin internet, servicio caído, librería no cargada, etc.), cae de
+// respaldo a abrir el cliente de correo del testador con el mensaje ya redactado (mailto:).
+function notificarAlbaceaDigitalPorCorreo() {
+  var data = JSON.parse(localStorage.getItem('albaceaDigitalTestamento') || 'null');
+  if (!data || !data.correo) {
+    mostrarError('msg-error-albacea-digital', 'Guarde primero un correo electrónico del albacea.');
+    return;
+  }
+  var testador = obtenerIdentidadTestador();
+  var nombreTestador = testador ? testador.nombre : 'el testador';
+  var correoTestador = (function () {
+    var cliente = JSON.parse(localStorage.getItem('clienteTestamento') || 'null');
+    return cliente && cliente.datosContacto ? cliente.datosContacto.correo : '';
+  })();
+
+  var instruccionesTexto = data.instrucciones
+    ? 'Instrucciones adicionales dejadas por el testador:\n"' + data.instrucciones + '"'
+    : '';
+
+  var btn = document.getElementById('btn-notificar-albacea');
+  var textoOriginalBtn = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+  }
+
+  function restaurarBoton() {
+    if (btn) { btn.disabled = false; btn.innerHTML = textoOriginalBtn; }
+  }
+
+  function usarMailtoDeRespaldo() {
+    var asunto = 'Has sido designado(a) como Albacea Digital';
+    var cuerpo =
+      'Hola ' + data.nombre + ',\n\n' +
+      nombreTestador + ' te ha designado como Albacea Digital dentro de su Testamento de Activos Digitales, ' +
+      'elaborado con la aplicación "Mi Testamento Virtual" conforme al Código Civil Colombiano.\n\n' +
+      'Como Albacea Digital, en el momento en que corresponda, se te encomendará la administración, ' +
+      'gestión y disposición de su patrimonio digital (cuentas, redes sociales, archivos en la nube, ' +
+      'suscripciones y/o activos criptográficos), conforme a las instrucciones dejadas en el documento.\n\n' +
+      (instruccionesTexto ? instruccionesTexto + '\n\n' : '') +
+      'Si tienes preguntas sobre esta designación, por favor comunícate directamente con ' + nombreTestador + '.\n\n' +
+      'Este es un mensaje informativo enviado manualmente desde la aplicación Mi Testamento Virtual.';
+    var mailtoUrl = 'mailto:' + encodeURIComponent(data.correo) +
+      '?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
+    window.location.href = mailtoUrl;
+  }
+
+  if (typeof emailjs === 'undefined') {
+    // La librería de EmailJS no cargó (sin internet, bloqueada, etc.) — usar respaldo
+    restaurarBoton();
+    usarMailtoDeRespaldo();
+    return;
+  }
+
+  var params = {
+    to_email:        data.correo,
+    to_name:         data.nombre,
+    name:            'Mi Testamento Virtual',
+    testador_nombre: nombreTestador,
+    instrucciones:   instruccionesTexto,
+    reply_to:        correoTestador || data.correo
+  };
+
+  emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, params, EMAILJS_CONFIG.publicKey)
+    .then(function () {
+      restaurarBoton();
+      mostrarExito('msg-exito-albacea-digital', 'Correo enviado a ' + data.nombre + ' (' + data.correo + ').');
+    })
+    .catch(function (err) {
+      restaurarBoton();
+      console.error('EmailJS error:', err);
+      mostrarError('msg-error-albacea-digital', 'No se pudo enviar el correo automáticamente. Se abrirá tu programa de correo como respaldo.');
+      usarMailtoDeRespaldo();
+    });
 }
 
 // ============================================================
@@ -1120,6 +1402,7 @@ function guardarActivoDigital() {
     actualizarSubtipo();
     cargarActivosDigitales();
     actualizarStepperGlobal();
+    actualizarTabsDigitalLocks();
     cargarVistaPreviaTestamentoDigital();
   } catch(e) {
     mostrarError('msg-error-activo-digital', 'Error: ' + e.message);
@@ -1161,6 +1444,7 @@ function confirmarEliminarActivoDigital(index) {
     lista.splice(index, 1);
     localStorage.setItem('activosDigitalesTestamento', JSON.stringify(lista));
     cargarActivosDigitales();
+    actualizarTabsDigitalLocks();
     cargarVistaPreviaTestamentoDigital();
   });
 }
@@ -1220,6 +1504,7 @@ function guardarSeleccionClausulas() {
     if (card) card.classList.toggle('clausula-inactiva', !seleccion[letra]);
   });
   localStorage.setItem('clausulasDigitalSeleccion', JSON.stringify(seleccion));
+  actualizarTabsDigitalLocks();
   cargarVistaPreviaTestamentoDigital();
 }
 
@@ -1263,43 +1548,45 @@ function cargarTestigosDigital() {
 }
 
 // ============================================================
-// TESTAMENTO DE ACTIVOS DIGITALES — identificación, vista previa, imprimir/exportar
-// (Documento independiente del testamento general; no requiere Testador/Bienes/Beneficiarios)
+// TESTAMENTO DE ACTIVOS DIGITALES — identidad (registro único), vista previa, imprimir/exportar
+// (Documento independiente del testamento general; reutiliza el mismo registro de Testador
+//  que el Testamento Clásico para no duplicar datos personales)
 // ============================================================
-function guardarTestadorDigital() {
-  var nombre    = document.getElementById('testador-digital-nombre')    ? document.getElementById('testador-digital-nombre').value.trim()    : '';
-  var documento = document.getElementById('testador-digital-documento') ? document.getElementById('testador-digital-documento').value.trim() : '';
-  var domicilio = document.getElementById('testador-digital-domicilio') ? document.getElementById('testador-digital-domicilio').value.trim() : '';
 
-  if (!nombre || !documento) {
-    mostrarError('msg-error-testador-digital', 'Ingrese nombre y documento del testador.');
-    return;
-  }
-
-  var data = { nombre: nombre, documento: documento, domicilio: domicilio };
-  try {
-    localStorage.setItem('testadorDigitalTestamento', JSON.stringify(data));
-    mostrarExito('msg-exito-testador-digital', 'Identificación guardada correctamente.');
-    cargarVistaPreviaTestamentoDigital();
-  } catch(e) {
-    mostrarError('msg-error-testador-digital', 'Error al guardar: ' + e.message);
-  }
+// Obtiene la identidad del testador desde el ÚNICO registro (clienteTestamento),
+// con el mismo formato que usa la vista previa del Testamento Clásico.
+function obtenerIdentidadTestador() {
+  var cliente = JSON.parse(localStorage.getItem('clienteTestamento') || 'null');
+  if (!cliente) return null;
+  var dp = cliente.datosPersonales || {};
+  var dc = cliente.datosContacto || {};
+  return {
+    nombre:    (dp.nombre + ' ' + dp.apellido).trim(),
+    documento: (dp.tipoDocumento || '') + ' No. ' + (dp.numeroDocumento || ''),
+    domicilio: [dc.municipioResidencia, dc.departamentoResidencia, dc.paisResidencia].filter(Boolean).join(', ')
+  };
 }
 
-function cargarTestadorDigital() {
-  var data = JSON.parse(localStorage.getItem('testadorDigitalTestamento') || 'null');
-  if (!data) return;
-  var set = function(id, val) { var el = document.getElementById(id); if (el) el.value = val || ''; };
-  set('testador-digital-nombre',    data.nombre);
-  set('testador-digital-documento', data.documento);
-  set('testador-digital-domicilio', data.domicilio);
+// Pinta la tarjeta de identidad de solo lectura en la pestaña "Vista Previa y Firma"
+function pintarIdentidadDigital() {
+  var box = document.getElementById('identidad-digital-resumen');
+  if (!box) return;
+  var identidad = obtenerIdentidadTestador();
+  if (!identidad) {
+    box.innerHTML = '<p style="color:var(--warning);">⚠ Completa primero tu <strong>Registro de Testador</strong>.</p>';
+    return;
+  }
+  box.innerHTML =
+    '<p><strong>Nombre:</strong> ' + escapeHtml(identidad.nombre) + '</p>' +
+    '<p><strong>Documento:</strong> ' + escapeHtml(identidad.documento) + '</p>' +
+    (identidad.domicilio ? '<p><strong>Domicilio:</strong> ' + escapeHtml(identidad.domicilio) + '</p>' : '');
 }
 
 function cargarVistaPreviaTestamentoDigital() {
   var prev = document.getElementById('vista-previa-testamento-digital');
   if (!prev) return; // la pestaña aún no existe en el DOM en este momento
 
-  var testador          = JSON.parse(localStorage.getItem('testadorDigitalTestamento') || 'null');
+  var testador          = obtenerIdentidadTestador();
   var albaceaDigital     = JSON.parse(localStorage.getItem('albaceaDigitalTestamento') || 'null');
   var activosDigitales   = JSON.parse(localStorage.getItem('activosDigitalesTestamento')) || [];
   var testigos           = JSON.parse(localStorage.getItem('testigosDigitalTestamento') || 'null') || [];
@@ -1406,10 +1693,12 @@ function copiarClausula(elementId) {
 var _mostrarPaginaOriginal = mostrarPagina;
 mostrarPagina = function(paginaId) {
   _mostrarPaginaOriginal(paginaId);
-  if (paginaId === 'digital') {
+  // Si paginaId === 'digital' pero el registro de Testador no existía, _mostrarPaginaOriginal
+  // ya redirigió internamente a 'cliente'; en ese caso no inicializamos la sección digital.
+  if (paginaId === 'digital' && pasoCompletado('cliente')) {
     cargarAlbaceaDigital();
     cargarActivosDigitales();
-    cargarTestadorDigital();
+    actualizarTabsDigitalLocks();
     mostrarTabDigital('dTab-albacea-content');
   }
 };
